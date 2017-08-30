@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GarageLogic
+﻿namespace GarageLogic
 {
-    class VehicleCareOrder
+    class VehicleRecord
     {
         enum eStatus
         {
@@ -16,16 +10,16 @@ namespace GarageLogic
         }
 
         string m_OwnerName;
-        string m_OwnerPhone;
+        string m_OwnerPhoneNumber;
         eStatus m_VehicleStatus;
         Vehicle m_Vehicle;
 
-        public VehicleCareOrder(string i_OwnerName, string i_OwnerPhone, Vehicle i_Vehicle)
+        public VehicleRecord(string i_OwnerName, string i_OwnerPhoneNumber, Vehicle i_Vehicle)
         {
             m_Vehicle = i_Vehicle;
             m_VehicleStatus = eStatus.InRepair;
             m_OwnerName = i_OwnerName;
-            m_OwnerPhone = i_OwnerPhone;
+            m_OwnerPhoneNumber = i_OwnerPhoneNumber;
         }
     }
 }

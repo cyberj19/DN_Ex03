@@ -38,21 +38,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Exceptions\ValueOutOfRangeException.cs" />
-    <Compile Include="Garage\Manager.cs" />
-    <Compile Include="VehicleTypes\Abstact\Bike.cs" />
-    <Compile Include="VehicleTypes\Abstact\Car.cs" />
-    <Compile Include="VehicleParts\EngineTypes\ElectricEngine.cs" />
-    <Compile Include="VehicleParts\Engine.cs" />
-    <Compile Include="VehicleParts\EngineTypes\FuelEngine.cs" />
-    <Compile Include="VehicleTypes\ElectricBike.cs" />
-    <Compile Include="VehicleTypes\ElectricCar.cs" />
-    <Compile Include="VehicleTypes\FuelBike.cs" />
-    <Compile Include="VehicleTypes\FuelCar.cs" />
-    <Compile Include="VehicleTypes\Abstact\Truck.cs" />
-    <Compile Include="VehicleTypes\FuelTruck.cs" />
+    <Compile Include="GarageManager.cs" />
+    <Compile Include="Utils.cs" />
+    <Compile Include="VehicleFactory.cs" />
+    <Compile Include="VehicleTypes\Motorcycle.cs" />
+    <Compile Include="VehicleTypes\Car.cs" />
+    <Compile Include="VehicleParts\PowerSources\ElectricalSource.cs" />
+    <Compile Include="VehicleParts\PowerSource.cs" />
+    <Compile Include="VehicleParts\PowerSources\FuelSource.cs" />
+    <Compile Include="VehicleTypes\Truck.cs" />
     <Compile Include="Vehicle.cs" />
-    <Compile Include="VehicleParts\Wheel.cs" />
-    <Compile Include="Garage\VehicleCareOrder.cs" />
+    <Compile Include="VehicleParts\Tire.cs" />
+    <Compile Include="VehicleRecord.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

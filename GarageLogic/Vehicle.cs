@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace GarageLogic
 {
@@ -10,13 +6,15 @@ namespace GarageLogic
     {
         protected string m_ModelName;
         protected string m_RegistrationNumber;
-        protected float m_EnergyLeftPercent;
-        protected List<Wheel> m_Wheels;
-        protected Engine m_Engine;
+        protected float m_EnergyLeftPercent = 0;
+        protected List<Tire> m_Wheels;
+        protected PowerSource m_PowerSourceCapacitor;
 
-        public Vehicle(Engine i_Engine)
+        public Vehicle(PowerSource i_PowerSource, string i_ModelName,
+            string i_RegistrationNumber, int i_NumberOfWheels, Tire i_TireType)
         {
-
+            m_Wheels = new List<Tire>(i_NumberOfWheels);
+            m_Wheels.ForEach(wheel => wheel = i_TireType);
         }
     }
 }

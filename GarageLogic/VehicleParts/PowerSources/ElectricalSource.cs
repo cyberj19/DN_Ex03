@@ -1,21 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using GarageLogic.Exceptions;
 
 namespace GarageLogic
 {
-    class ElectricEngine : Engine
+    class ElectricalSource : PowerSource
     {
-        float m_CurrentBattaryLeftHours;
+        float m_CurrentBattaryLeftHours = 0;
         readonly float r_MaxBattaryTimeInHours;
 
+        public ElectricalSource(float i_MaxBattaryTimeInHours)
+        {
+            r_MaxBattaryTimeInHours = i_MaxBattaryTimeInHours;
+        }
         public void Recharge(float m_ChargeHoursToAdd)
         {
             if (((m_CurrentBattaryLeftHours + m_ChargeHoursToAdd) > r_MaxBattaryTimeInHours) || m_ChargeHoursToAdd < 0)
             {
-                throw ValueOutOfRangeException;
+                throw new ValueOutOfRangeException();
             }
             else
             {

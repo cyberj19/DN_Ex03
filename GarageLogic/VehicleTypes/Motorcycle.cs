@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GarageLogic
+﻿namespace GarageLogic
 {
-    abstract class Bike : Vehicle
+    class Motorcycle : Vehicle
     {
         public enum eLicenseType
         {
@@ -21,7 +15,9 @@ namespace GarageLogic
         protected const float k_MaxAllowedWheelPSI = 28;
         protected const byte k_NumOfWheels = 2;
 
-        public Bike(Engine i_EngineType) : base(i_EngineType)
+        public Motorcycle(PowerSource i_EngineType, string i_ModelName, string i_RegistrationNumber,
+            eLicenseType i_LisenceType, int i_EngineVolumeCC) 
+            : base(i_EngineType, i_ModelName, i_RegistrationNumber, k_NumOfWheels, new Tire(k_MaxAllowedWheelPSI,"default"))
         {
 
         }

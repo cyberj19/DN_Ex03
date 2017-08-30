@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GarageLogic
+﻿namespace GarageLogic
 {
-    abstract class Car : Vehicle
+    class Car : Vehicle
     {
         public enum eColor
         {
@@ -29,7 +23,9 @@ namespace GarageLogic
         protected const float k_MaxAllowedWheelPSI = 32;
         protected const byte k_NumOfWheels = 4;
 
-        public Car(Engine i_EngineType) : base(i_EngineType)
+        public Car(PowerSource i_EngineType, string i_ModelName, string i_RegistrationNumber,
+            eDoorsAmount i_DoorsAmount, eColor i_Color) 
+            : base(i_EngineType, i_ModelName, i_RegistrationNumber, k_NumOfWheels, new Tire(k_MaxAllowedWheelPSI, "default"))
         {
 
         }
