@@ -33,5 +33,19 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Utils\BasicConsoleOperations.cs" />
+    <Compile Include="Garage.cs" />
+    <Compile Include="Entry.cs" />
+    <Compile Include="MenuOption.cs" />
+    <Compile Include="PositiveRange.cs" />
+    <Compile Include="Utils\VehiclePrintUtils.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GarageLogic\GarageLogic.csproj">
+      <Project>{997e10f0-d862-4383-87f2-cd85b6b74ce3}</Project>
+      <Name>GarageLogic</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
