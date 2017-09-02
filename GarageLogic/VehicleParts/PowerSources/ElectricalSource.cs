@@ -4,25 +4,30 @@ namespace GarageLogic
 {
     class ElectricalSource : PowerSource
     {
-        //todo: Readonly comes first, before other variables that are non-const and non-static
-        float m_CurrentBattaryLeftHours = 0;
-        readonly float r_MaxBattaryTimeInHours;
+        LimitedRangeValue m_BattaryLevel;
 
+        public override float CurrentPowerLevel
+        {
+            get
+            {
+                return m_BattaryLevel.CurrentAmount;
+            }
+        }
+
+        public override float PowerCapacity
+        {
+            get
+            {
+                return m_BattaryLevel.MaxAmount;
+            }
+        }
         public ElectricalSource(float i_MaxBattaryTimeInHours)
         {
-            r_MaxBattaryTimeInHours = i_MaxBattaryTimeInHours;
+            m_BattaryLevel = new LimitedRangeValue(i_MaxBattaryTimeInHours);
         }
         public void Recharge(float m_ChargeHoursToAdd)
         {
-            //todo: Unreadable if
-            if (((m_CurrentBattaryLeftHours + m_ChargeHoursToAdd) > r_MaxBattaryTimeInHours) || m_ChargeHoursToAdd < 0)
-            {
-                throw new ValueOutOfRangeException();
-            }
-            else
-            {
-                m_CurrentBattaryLeftHours += m_ChargeHoursToAdd;
-            }
+            m_BattaryLevel.CurrentAmount += m_ChargeHoursToAdd;
         }
 
     }

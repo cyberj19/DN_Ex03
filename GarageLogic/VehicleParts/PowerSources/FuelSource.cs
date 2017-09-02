@@ -14,8 +14,25 @@ namespace GarageLogic
         }
 
         readonly eFuelType r_FuelType;
+        LimitedRangeValue FuelTank;
         readonly float r_MaxFuelLiters;
         float m_CurrentFuelLiters = 0;
+
+        public override float CurrentPowerLevel
+        {
+            get
+            {
+                return FuelTank.CurrentAmount;
+            }
+        }
+
+        public override float PowerCapacity
+        {
+            get
+            {
+                return FuelTank.MaxAmount;
+            }
+        }
 
         public FuelSource(eFuelType i_FuelType, float i_MaxCapacityInLiters)
         {

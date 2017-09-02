@@ -2,22 +2,34 @@
 {
     struct Tire
     {
-        readonly string m_ManufacturerName; //todo: m --> r
-        readonly float r_MaxPSI;
-        float m_CurrentPSI;
+        readonly string r_ManufacturerName;
+        LimitedRangeValue m_AirPressure;
+
+        public float MaxPSI
+        {
+            get
+            {
+                return m_AirPressure.MaxAmount;
+            }
+        }
+
+        public float CurrentPSI
+        {
+            get
+            {
+                return m_AirPressure.CurrentAmount;
+            }
+        }
 
         public void InflateAir(float i_AdditionPSI)
         {
-            //todo: We talked about this, move this to a class
-            Utils.ValidateAddition(m_CurrentPSI, i_AdditionPSI, r_MaxPSI);
-            m_CurrentPSI += i_AdditionPSI;
+            m_AirPressure.CurrentAmount = i_AdditionPSI;
         }
 
         public Tire(float i_MaxPSI, string i_ManufacturerName)
         {
-            r_MaxPSI = i_MaxPSI;
-            m_ManufacturerName = i_ManufacturerName;
-            m_CurrentPSI = 0;
+            m_AirPressure = new LimitedRangeValue(i_MaxPSI, "PSI");
+            r_ManufacturerName = i_ManufacturerName;
         }
 
     }
