@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using GarageLogic.VehicleParts;
 
-namespace GarageLogic
+namespace GarageLogic.VehicleTypes
 {
     class Truck : Vehicle
     {

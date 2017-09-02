@@ -1,6 +1,6 @@
 ﻿using GarageLogic.Exceptions;
 
-namespace GarageLogic
+namespace GarageLogic.VehicleParts.PowerSources
 {
     class ElectricalSource : PowerSource
     {

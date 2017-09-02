@@ -41,7 +41,6 @@
     <Compile Include="Exceptions\ValueOutOfRangeException.cs" />
     <Compile Include="GarageManager.cs" />
     <Compile Include="TiresFactory.cs" />
-    <Compile Include="Utils.cs" />
     <Compile Include="VehicleFactory.cs" />
     <Compile Include="VehicleRegistrationInfo.cs" />
     <Compile Include="VehicleTypes\Motorcycle.cs" />

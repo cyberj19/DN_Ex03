@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace GarageLogic.Garage
+namespace GarageLogic
 {
     public class GarageManager
     {

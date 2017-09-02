@@ -1,7 +1,7 @@
 ﻿using GarageLogic.Exceptions;
 using System;
 
-namespace GarageLogic
+namespace GarageLogic.VehicleParts.PowerSources
 {
     class FuelSource : PowerSource
     {

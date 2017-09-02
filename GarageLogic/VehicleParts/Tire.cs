@@ -1,4 +1,4 @@
-﻿namespace GarageLogic
+﻿namespace GarageLogic.VehicleParts
 {
     public struct Tire
     {

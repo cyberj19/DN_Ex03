@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using GarageLogic.VehicleParts;
 
 namespace GarageLogic
 {
@@ -7,6 +8,14 @@ namespace GarageLogic
         readonly VehicleRegistrationInfo r_Info;
         protected List<Tire> m_Tires;
         protected PowerSource m_PowerSource;
+
+        public List<Tire> Tires
+        {
+            get
+            {
+                return m_Tires;
+            }
+        }
 
         public PowerSource PowerSource
         {
