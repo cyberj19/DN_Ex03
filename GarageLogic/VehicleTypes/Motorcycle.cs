@@ -1,4 +1,6 @@
-﻿namespace GarageLogic
+﻿using System.Collections.Generic;
+
+namespace GarageLogic
 {
     class Motorcycle : Vehicle
     {
@@ -15,9 +17,9 @@
         protected const float k_MaxAllowedWheelPSI = 28;
         protected const byte k_NumOfWheels = 2;
 
-        public Motorcycle(PowerSource i_EngineType, string i_ModelName, string i_RegistrationNumber,
+        public Motorcycle(PowerSource i_PowerSource, VehicleRegistrationInfo i_VehicleInfo, List<Tire> i_Tires,
             eLicenseType i_LisenceType, int i_EngineVolumeCC) 
-            : base(i_EngineType, i_ModelName, i_RegistrationNumber, k_NumOfWheels, new Tire(k_MaxAllowedWheelPSI,"default"))
+            : base(i_PowerSource, i_VehicleInfo, i_Tires)
         {
 
         }

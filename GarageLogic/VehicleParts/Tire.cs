@@ -28,8 +28,8 @@
 
         public Tire(float i_MaxPSI, string i_ManufacturerName)
         {
-            m_AirPressure = new LimitedRangeValue(i_MaxPSI, "PSI");
             r_ManufacturerName = i_ManufacturerName;
+            m_AirPressure = new LimitedRangeValue(i_MaxPSI);
         }
 
     }

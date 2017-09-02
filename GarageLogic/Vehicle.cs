@@ -4,19 +4,39 @@ namespace GarageLogic
 {
     abstract class Vehicle
     {
-        //todo: These cannot be changed! ReadOnly
-        protected string m_ModelName;
-        protected string m_RegistrationNumber;
-        protected float m_EnergyLeftPercent = 0;
-        protected List<Tire> m_Wheels;
-        protected PowerSource m_PowerSourceCapacitor;
+        readonly VehicleRegistrationInfo r_Info;
+        protected List<Tire> m_Tires;
+        protected PowerSource m_PowerSource;
 
-        public Vehicle(PowerSource i_PowerSource, string i_ModelName,
-            string i_RegistrationNumber, int i_NumberOfWheels, Tire i_TireType)
+        public float EnergyLeftPercentage
         {
-            m_Wheels = new List<Tire>(i_NumberOfWheels);
-            //todo: Please use formal foreach.. this is unreadable + unlearened
-            m_Wheels.ForEach(wheel => wheel = i_TireType);
+            get
+            {
+                return m_PowerSource.EnergyPercent;
+            }
+        }
+
+        public string ModelName
+        {
+            get
+            {
+                return r_Info.ModelName;
+            }
+        }
+
+        public string PlateNumber
+        {
+            get
+            {
+                return r_Info.PlateNumber;
+            }
+        }
+
+        public Vehicle(PowerSource i_PowerSource, VehicleRegistrationInfo i_VehicleInfo, List<Tire> i_Tires)
+        {
+            r_Info = i_VehicleInfo;
+            m_PowerSource = i_PowerSource;
+            m_Tires = i_Tires;
         }
     }
 }

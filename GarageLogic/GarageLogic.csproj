@@ -37,10 +37,13 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LimitedRangeValue.cs" />
     <Compile Include="Exceptions\ValueOutOfRangeException.cs" />
     <Compile Include="GarageManager.cs" />
+    <Compile Include="TiresFactory.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="VehicleFactory.cs" />
+    <Compile Include="VehicleRegistrationInfo.cs" />
     <Compile Include="VehicleTypes\Motorcycle.cs" />
     <Compile Include="VehicleTypes\Car.cs" />
     <Compile Include="VehicleParts\PowerSources\ElectricalSource.cs" />

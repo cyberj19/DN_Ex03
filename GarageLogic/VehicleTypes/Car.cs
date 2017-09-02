@@ -1,4 +1,6 @@
-﻿namespace GarageLogic
+﻿using System.Collections.Generic;
+
+namespace GarageLogic
 {
     class Car : Vehicle
     {
@@ -19,18 +21,17 @@
         }
 
         //todo: Truck.cs review same rules here
-        protected eColor m_Color;
-        protected eDoorsAmount m_DoorsAmount;
-        protected const float k_MaxAllowedWheelPSI = 32;
-        protected const byte k_NumOfWheels = 4;
-
+        protected readonly eColor r_Color;
+        protected readonly eDoorsAmount r_DoorsAmount;
+       
         //todo: Why number of doors is in an enum? Tommorow i would want a car with 7 doors. Why isnt this possible?
         
-        public Car(PowerSource i_EngineType, string i_ModelName, string i_RegistrationNumber,
+        public Car(PowerSource i_PowerSource, VehicleRegistrationInfo i_VehicleInfo, List<Tire> i_Tires,
             eDoorsAmount i_DoorsAmount, eColor i_Color) 
-            : base(i_EngineType, i_ModelName, i_RegistrationNumber, k_NumOfWheels, new Tire(k_MaxAllowedWheelPSI, "default"))
+            : base(i_PowerSource, i_VehicleInfo, i_Tires)
         {
-
+            r_Color = i_Color;
+            r_DoorsAmount = i_DoorsAmount;
         }
 
     }

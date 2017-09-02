@@ -12,7 +12,6 @@ namespace GarageLogic
         readonly float r_MaxAmount;
         const float k_MinAmount = 0f;
         float m_CurrentAmount;
-        readonly T r_Type;
 
         public float CurrentAmount
         {
@@ -38,11 +37,10 @@ namespace GarageLogic
             }
         }
 
-        public LimitedRangeValue(float i_MaxAmount, T i_Type)
+        public LimitedRangeValue(float i_MaxAmount)
         {
             r_MaxAmount = i_MaxAmount;
             m_CurrentAmount = k_MinAmount;
-            r_Type = i_Type;
         }
 
     }
