@@ -5,6 +5,14 @@
         readonly string r_ManufacturerName;
         LimitedRangeValue m_AirPressure;
 
+        public string ManufacturerName
+        {
+            get
+            {
+                return r_ManufacturerName;
+            }
+        }
+
         public float MaxPSI
         {
             get
