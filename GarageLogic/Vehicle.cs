@@ -2,7 +2,7 @@
 
 namespace GarageLogic
 {
-    abstract class Vehicle
+    public abstract class Vehicle
     {
         readonly VehicleRegistrationInfo r_Info;
         protected List<Tire> m_Tires;

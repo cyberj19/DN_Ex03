@@ -1,6 +1,6 @@
 ﻿namespace GarageLogic
 {
-    class VehicleRecord
+    public class VehicleRecord
     {
         enum eStatus
         {

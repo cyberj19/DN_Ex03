@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GarageLogic
 {
-    struct VehicleRegistrationInfo
+    public struct VehicleRegistrationInfo
     {
         readonly string r_ModelName;
         readonly string r_PlateNumber;

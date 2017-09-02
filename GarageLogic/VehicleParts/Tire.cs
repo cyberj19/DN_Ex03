@@ -1,6 +1,6 @@
 ﻿namespace GarageLogic
 {
-    struct Tire
+    public struct Tire
     {
         readonly string r_ManufacturerName;
         LimitedRangeValue m_AirPressure;

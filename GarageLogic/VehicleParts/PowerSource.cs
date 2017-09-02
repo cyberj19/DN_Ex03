@@ -1,6 +1,6 @@
 ﻿namespace GarageLogic
 {
-    abstract class PowerSource
+    public abstract class PowerSource
     {
         public float EnergyPercent
         {

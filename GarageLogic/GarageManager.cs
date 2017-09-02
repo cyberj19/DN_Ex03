@@ -2,7 +2,7 @@
 
 namespace GarageLogic.Garage
 {
-    class GarageManager
+    public class GarageManager
     {
         List<VehicleRecord> m_VehicleRecord;
 
