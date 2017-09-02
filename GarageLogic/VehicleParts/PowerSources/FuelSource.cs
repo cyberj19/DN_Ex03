@@ -3,7 +3,7 @@ using System;
 
 namespace GarageLogic.VehicleParts.PowerSources
 {
-    class FuelSource : PowerSource
+    public class FuelSource : PowerSource
     {
         public enum eFuelType
         {

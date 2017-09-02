@@ -2,7 +2,7 @@
 
 namespace GarageLogic.VehicleParts.PowerSources
 {
-    class ElectricalSource : PowerSource
+    public class ElectricalSource : PowerSource
     {
         LimitedRangeValue m_BattaryLevel;
 
