@@ -26,7 +26,7 @@ namespace GarageLogic
         public void Refuel(eFuelType i_FuelType, float i_FuelLitersToAdd)
         {
             validateFuelType(i_FuelType);
-            Utils.ValidateAddition(m_CurrentFuelLiters, i_FuelLitersToAdd, r_MaxFuelLiters);
+            Utils.ValidateAddition(m_CurrentFuelLiters, i_FuelLitersToAdd, r_MaxFuelLiters); //todo: To a class...
             m_CurrentFuelLiters += i_FuelLitersToAdd;
         }
 

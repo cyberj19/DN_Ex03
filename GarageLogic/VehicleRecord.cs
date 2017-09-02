@@ -9,6 +9,7 @@
             PaymentReceived
         }
 
+        //todo: Readonly?
         string m_OwnerName;
         string m_OwnerPhoneNumber;
         eStatus m_VehicleStatus;

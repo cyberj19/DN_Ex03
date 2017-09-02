@@ -9,7 +9,7 @@
             AA,
             BB
         }
-
+        //todo: Same review notes as truck.cs
         protected eLicenseType m_LicenseType;
         protected int m_EngineVolumeCC;
         protected const float k_MaxAllowedWheelPSI = 28;
