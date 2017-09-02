@@ -8,6 +8,14 @@ namespace GarageLogic
         protected List<Tire> m_Tires;
         protected PowerSource m_PowerSource;
 
+        public PowerSource PowerSource
+        {
+            get
+            {
+                return m_PowerSource;
+            }
+        }
+
         public float EnergyLeftPercentage
         {
             get

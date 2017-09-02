@@ -7,7 +7,7 @@ using GarageLogic.Exceptions;
 
 namespace GarageLogic
 {
-    struct LimitedRangeValue //todo:  very bad name. Yehonatan, maybe you can think of a better one?
+    struct LimitedRangeValue
     {
         readonly float r_MaxAmount;
         const float k_MinAmount = 0f;
