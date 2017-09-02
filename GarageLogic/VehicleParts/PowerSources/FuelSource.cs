@@ -31,6 +31,14 @@ namespace GarageLogic.VehicleParts.PowerSources
             }
         }
 
+        public eFuelType FuelType
+        {
+            get
+            {
+                return r_FuelType;
+            }
+        }
+
         public FuelSource(eFuelType i_FuelType, float i_MaxCapacityInLiters)
         {
             r_FuelType = i_FuelType;
