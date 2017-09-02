@@ -2,7 +2,7 @@
 {
     public class VehicleRecord
     {
-        enum eStatus
+        public enum eStatus
         {
             InRepair,
             Fixed,
@@ -31,7 +31,7 @@
             }
         }
 
-        eStatus Status
+        public eStatus Status
         {
             get
             {
