@@ -7,6 +7,7 @@ using GarageLogic.Exceptions;
 
 namespace GarageLogic
 {
+    //todo: This is the positive range class. Perhaps change it to template and use it instead?...
     struct LimitedRangeValue
     {
         readonly float r_MaxAmount;
@@ -23,7 +24,7 @@ namespace GarageLogic
             set
             {
                 //todo: BAD, not current amount but the value itself!
-                if (((m_CurrentAmount + value) > r_MaxAmount) || value < k_MinAmount)
+                if ((value > r_MaxAmount) || (value < k_MinAmount))
                 {
                     throw new ValueOutOfRangeException();
                 }

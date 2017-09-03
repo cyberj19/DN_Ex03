@@ -250,7 +250,7 @@ namespace ConsoleUI
 
             electricSource = (ElectricalSource)powerSource;
             //todo: sure needs in hours?
-            timeToCharge = BasicConsoleOperations.GetPositiveFloatFromUser("Please insert time to charge in hours:");
+            timeToCharge = BasicConsoleOperations.GetPositiveFloatFromUserWithMaxVal("Please insert time to charge in hours:", powerSource.PowerCapacity - powerSource.CurrentPowerLevel);
             electricSource.Recharge(timeToCharge);
         }
 
@@ -268,7 +268,7 @@ namespace ConsoleUI
 
             fuelSource = (FuelSource)powerSource;
             usedFuelType = BasicConsoleOperations.GetEnumChoice<FuelSource.eFuelType>("Please choose fuel type:");
-            amountToFill = BasicConsoleOperations.GetPositiveFloatFromUser("Please insert amount to fuel in liters:");
+            amountToFill = BasicConsoleOperations.GetPositiveFloatFromUserWithMaxVal("Please insert amount to fuel in liters:", powerSource.PowerCapacity - powerSource.CurrentPowerLevel);
             fuelSource.Refuel(usedFuelType, amountToFill);
         }
 

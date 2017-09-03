@@ -10,6 +10,7 @@ namespace ConsoleUI
     {
         public static void Main()
         {
+            //todo: make sure throwing the right exceptions. Argument exception for trying to fuel an electric car? Mybe Bad Parsing?
             Garage garage = new Garage();
             garage.Run();
         }
