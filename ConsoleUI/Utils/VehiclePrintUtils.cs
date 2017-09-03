@@ -71,7 +71,7 @@ namespace ConsoleUI.Utils
             sourceStrBuilder.AppendFormat("Fuel Type: {0} {1}", i_Source.FuelType.ToString(), Environment.NewLine);
             sourceStrBuilder.AppendFormat("Current Fuel Level: {0} {1}", i_Source.CurrentPowerLevel, Environment.NewLine);
             sourceStrBuilder.AppendFormat("Fuel Capacity: {0} {1}", i_Source.PowerCapacity, Environment.NewLine);
-            sourceStrBuilder.AppendFormat("Energy Percentage: {0} {1}", i_Source.EnergyPercent, Environment.NewLine);
+            sourceStrBuilder.AppendFormat("Energy Percentage: {0:P2} {1}", i_Source.EnergyPercent, Environment.NewLine);
 
             BasicConsoleOperations.WriteString(sourceStrBuilder.ToString());
         }
@@ -85,7 +85,7 @@ namespace ConsoleUI.Utils
             sourceStrBuilder.AppendLine("Power Source Type: Electrical");
             sourceStrBuilder.AppendFormat("Current Battery Power Level: {0} {1}", i_Source.CurrentPowerLevel, Environment.NewLine);
             sourceStrBuilder.AppendFormat("Battery Capacity: {0} {1}", i_Source.PowerCapacity, Environment.NewLine);
-            sourceStrBuilder.AppendFormat("Energy Percentage: {0} {1}", i_Source.EnergyPercent, Environment.NewLine);
+            sourceStrBuilder.AppendFormat("Energy Percentage: {0:P2} {1}", i_Source.EnergyPercent, Environment.NewLine);
 
             BasicConsoleOperations.WriteString(sourceStrBuilder.ToString());
         }
