@@ -55,5 +55,10 @@ namespace GarageLogic
             m_PowerSource = i_PowerSource;
             m_Tires = i_Tires;
         }
+
+        public override int GetHashCode()
+        {
+            return PlateNumber.GetHashCode();
+        }
     }
 }
