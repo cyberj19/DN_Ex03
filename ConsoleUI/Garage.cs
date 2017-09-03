@@ -84,29 +84,37 @@ namespace ConsoleUI
             {
                 //todo: need to catch all exception here
                 //todo: should throw invalid input instead of the bool above
-                switch (i_Option)
+
+                if (i_Option != MenuOption.eOption.InsertNewVehicle && Garage.IsEmpty)
                 {
-                    case MenuOption.eOption.InsertNewVehicle:
-                        handleInsertNewVehicle();
-                        break;
-                    case MenuOption.eOption.ShowAllVehiclesId:
-                        handleShowAllVehicles();
-                        break;
-                    case MenuOption.eOption.ModifyVehicleState:
-                        handleModifyVehicleState(getVehicleRecordFromLicensePlate());
-                        break;
-                    case MenuOption.eOption.FillTireAir:
-                        handleFillTireAir(getVehicleRecordFromLicensePlate());
-                        break;
-                    case MenuOption.eOption.RefuelCar:
-                        handleRefuelCar(getVehicleRecordFromLicensePlate());
-                        break;
-                    case MenuOption.eOption.ChargeCar:
-                        handleChargeCar(getVehicleRecordFromLicensePlate());
-                        break;
-                    case MenuOption.eOption.ShowVehicleInformation:
-                        handleShowVehicleInformation(getVehicleRecordFromLicensePlate());
-                        break;
+                    Console.WriteLine("Garage is Empty, perhaps you want to insert a vehicle first?");
+                }
+                else
+                {
+                    switch (i_Option)
+                    {
+                        case MenuOption.eOption.InsertNewVehicle:
+                            handleInsertNewVehicle();
+                            break;
+                        case MenuOption.eOption.ShowAllVehiclesId:
+                            handleShowAllVehicles();
+                            break;
+                        case MenuOption.eOption.ModifyVehicleState:
+                            handleModifyVehicleState(getVehicleRecordFromLicensePlate());
+                            break;
+                        case MenuOption.eOption.FillTireAir:
+                            handleFillTireAir(getVehicleRecordFromLicensePlate());
+                            break;
+                        case MenuOption.eOption.RefuelCar:
+                            handleRefuelCar(getVehicleRecordFromLicensePlate());
+                            break;
+                        case MenuOption.eOption.ChargeCar:
+                            handleChargeCar(getVehicleRecordFromLicensePlate());
+                            break;
+                        case MenuOption.eOption.ShowVehicleInformation:
+                            handleShowVehicleInformation(getVehicleRecordFromLicensePlate());
+                            break;
+                    }
                 }
             }
             catch (ArgumentException aexcp)
