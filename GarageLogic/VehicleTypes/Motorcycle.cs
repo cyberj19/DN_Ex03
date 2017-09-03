@@ -3,7 +3,7 @@ using GarageLogic.VehicleParts;
 
 namespace GarageLogic.VehicleTypes
 {
-    class Motorcycle : Vehicle
+    public class Motorcycle : Vehicle
     {
         public enum eLicenseType
         {
@@ -12,17 +12,21 @@ namespace GarageLogic.VehicleTypes
             AA,
             BB
         }
-        //todo: Same review notes as truck.cs
-        protected eLicenseType m_LicenseType;
-        protected int m_EngineVolumeCC;
-        protected const float k_MaxAllowedWheelPSI = 28;
-        protected const byte k_NumOfWheels = 2;
 
+        //todo: DID NOT PRINT THIS INFO! go back to VehiclePrintUTils. check for other things aswell
+        private readonly MotorcycleInfo r_info;
+
+        
         public Motorcycle(PowerSource i_PowerSource, VehicleRegistrationInfo i_VehicleInfo, List<Tire> i_Tires,
-            eLicenseType i_LisenceType, int i_EngineVolumeCC) 
+            MotorcycleInfo i_Info) 
             : base(i_PowerSource, i_VehicleInfo, i_Tires)
         {
+            r_info = i_Info;
+        }
 
+        public Motorcycle(PowerSource i_PowerSource, List<Tire> i_Tires) : base(i_PowerSource, VehicleRegistrationInfo.Default, i_Tires)
+        {
+            r_info = MotorcycleInfo.Default;
         }
     }
 }

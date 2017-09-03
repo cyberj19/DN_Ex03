@@ -21,6 +21,14 @@
             }
         }
 
+        public static VehicleRegistrationInfo Default
+        {
+            get
+            {
+                return new VehicleRegistrationInfo(string.Empty, string.Empty);
+            }
+        }
+            
         public VehicleRegistrationInfo(string i_ModelName, string i_PlateNumber)
         {
             r_ModelName = i_ModelName;

@@ -1,14 +1,18 @@
-﻿using System.Collections.Generic;
-using System;
-using GarageLogic.VehicleParts;
+﻿using GarageLogic.VehicleParts;
 using GarageLogic.VehicleParts.PowerSources;
 using GarageLogic.VehicleTypes;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace GarageLogic
 {
     class VehicleFactory
     {
-        public enum eSupportedVehicle //todo: reconsider
+        public enum eSupportedVehicle 
         {
             ElectricCar,
             ElectricMotorcycle,
@@ -17,119 +21,185 @@ namespace GarageLogic
             Truck
         }
 
-        public enum eVehicleTypes
+        Dictionary<eSupportedVehicle, Vehicle> m_VehicleModels;
+
+        public VehicleFactory()
         {
-            Motorcycle,
-            Car,
-            Truck
+            m_VehicleModels = new Dictionary<eSupportedVehicle, Vehicle>();
+            initDictionary();
         }
 
-        public enum ePowerSource
+        private MethodInfo getMethod(string i_MethodName)
         {
-            Electrical,
-            Fuel
+            return typeof(VehicleFactory).GetMethod(i_MethodName);
         }
 
-        readonly TiresFactory r_TiresFactory;
-        Dictionary<Vehicle, PowerSource> m_CarRecipes; //todo:reconsider
-
-        public void CreateMotorcycle(string i_ModelName, string i_PlateNumber, ePowerSource i_PowerSourceType, string i_TireManufacturer, //todo: reconsider
-           Motorcycle.eLicenseType i_LisenceType, int i_EngineVolumeCC)
+        private void initDictionary()
         {
-            const float k_MaxAllowedWheelPSI = 28;
-            const byte k_NumOfTires = 2;
+            m_VehicleModels.Add(eSupportedVehicle.ElectricCar, createElectricCarModel());
+            m_VehicleModels.Add(eSupportedVehicle.ElectricMotorcycle, createElectricMotorcycleModel());
+            m_VehicleModels.Add(eSupportedVehicle.RegularCar, createFuelCarModel());
+            m_VehicleModels.Add(eSupportedVehicle.RegularMotorcycle, createFuelMotorcycleModel());
+            m_VehicleModels.Add(eSupportedVehicle.Truck, createTruckModel());
 
-            List<Tire> tires = r_TiresFactory.ProduceTires(i_TireManufacturer, k_NumOfTires, k_MaxAllowedWheelPSI);
-            VehicleRegistrationInfo vehicleInfo = new VehicleRegistrationInfo(i_ModelName, i_PlateNumber);
+        }
 
-            if (i_PowerSourceType == ePowerSource.Electrical)
+        //todo: better name than model
+        public Vehicle Create(eSupportedVehicle i_VehicleModel, VehicleRegistrationInfo i_VehicleInfo,
+                                object i_SpecificInfo,
+                                float i_InitialPowerSourceValue,
+                                string[] i_TiresManufacturerName, float[] i_TiresInitialAirValue)
+        {
+            Vehicle model = m_VehicleModels[i_VehicleModel];
+            PowerSource newPowerSource = createPowerSourceFromModel(model, i_InitialPowerSourceValue);
+            List<Tire> newTires = createTiresFromModel(model, i_TiresManufacturerName);
+            Type modelType = model.GetType();
+            Vehicle newVehicle = null;
+
+            if (modelType == typeof(Car))
             {
-                MakeElectricMotorcycle(vehicleInfo, tires, i_LisenceType, i_EngineVolumeCC);
+                CarInfo carInfo = i_SpecificInfo as CarInfo;
+
+                if (carInfo == null)
+                {
+                    throw new ArgumentException();
+                }
+
+                newVehicle = createCarFromModel(i_VehicleInfo, carInfo, newPowerSource, newTires);
             }
-            else if (i_PowerSourceType == ePowerSource.Fuel)
+            else if (modelType == typeof(Motorcycle))
             {
-                MakeFuelMotorcycle(vehicleInfo, tires, i_LisenceType, i_EngineVolumeCC);
+                MotorcycleInfo motorcycleInfo = i_SpecificInfo as MotorcycleInfo;
+
+                if (motorcycleInfo == null)
+                {
+                    throw new ArgumentException();
+                }
+
+                newVehicle = createMotorcycleFromModel(i_VehicleInfo, motorcycleInfo, newPowerSource, newTires);
+            }
+            else if (modelType == typeof(Truck))
+            {
+                TruckInfo truckInfo = i_SpecificInfo as TruckInfo;
+
+                if (truckInfo == null)
+                {
+                    throw new ArgumentException();
+                }
+
+                newVehicle = createTruckFromModel(i_VehicleInfo, truckInfo, newPowerSource, newTires);
+            }
+
+            return newVehicle;
+        }
+
+        private Vehicle createTruckFromModel(VehicleRegistrationInfo i_VehicleInfo, TruckInfo i_TruckInfo, PowerSource i_NewPowerSource, List<Tire> i_NewTires)
+        {
+            return new Truck(i_NewPowerSource, i_VehicleInfo, i_NewTires, i_TruckInfo);
+        }
+
+        private Vehicle createMotorcycleFromModel(VehicleRegistrationInfo i_VehicleInfo, MotorcycleInfo i_MotorcycleInfo, PowerSource i_NewPowerSource, List<Tire> i_NewTires)
+        {
+            return new Motorcycle(i_NewPowerSource, i_VehicleInfo, i_NewTires, i_MotorcycleInfo);
+        }
+
+        private Vehicle createCarFromModel(VehicleRegistrationInfo i_VehicleInfo, CarInfo i_CarInfo, PowerSource i_NewPowerSource, List<Tire> i_NewTires)
+        {
+            return new Car(i_NewPowerSource, i_VehicleInfo, i_NewTires, i_CarInfo);
+        }
+        
+        private List<Tire> createTiresFromModel(Vehicle i_Model, string[] i_TiresManufacturerName)
+        {
+            List<Tire> modelTires = i_Model.Tires;
+
+            return TiresFactory.ProductTiresAccordingToExisting(i_TiresManufacturerName, modelTires);
+        }
+
+        private PowerSource createPowerSourceFromModel(Vehicle i_Model, float i_InitialPowerSourceValue)
+        {
+            ElectricalSource electricalSource = i_Model.PowerSource as ElectricalSource;
+            FuelSource fuelSource;
+            FuelSource newFuelSource = null;
+            ElectricalSource newElectricalSource = null;
+            PowerSource newPowerSource = null;
+
+            if (electricalSource != null)
+            {
+                newElectricalSource = new ElectricalSource(electricalSource.PowerCapacity);
+                newElectricalSource.Recharge(i_InitialPowerSourceValue);
+                newPowerSource = newElectricalSource;
             }
             else
             {
-                throw new ArgumentException();
+                fuelSource = i_Model.PowerSource as FuelSource;
+                newFuelSource = new FuelSource(fuelSource.FuelType, fuelSource.PowerCapacity);
+                newFuelSource.Refuel(newFuelSource.FuelType ,i_InitialPowerSourceValue);
+                newPowerSource = newFuelSource;
             }
+
+            return newPowerSource;
         }
 
-        public void CreateCar(string i_ModelName, string i_PlateNumber, ePowerSource i_PowerSourceType, string i_TireManufacturer,
-            Car.eDoorsAmount i_DoorsAmount, Car.eColor i_Color)
+        private const int k_CarAmountOfTires = 4;
+        private const float k_CarTireMaxAmountOfPressure = 32.0f;
+        private const float k_CarMaxBattaryCapacityInHours = 2.8f;
+        private const string k_DefaultTiresManufacturerName = ""; //its constant, cannot assign string.empty
+
+        private const FuelSource.eFuelType k_CarFuelType = FuelSource.eFuelType.Octan98;
+        private const float k_CarTankCapacity = 50.0f;
+
+        private const FuelSource.eFuelType k_TruckFuelType = FuelSource.eFuelType.Soler;
+        private const float k_TruckTankCapacity = 130.0f;
+        private const int k_TruckAmountOfTires = 12;
+        private const float k_TruckTireMaxAmountOfPressure = 34.0f;
+
+
+        private const FuelSource.eFuelType k_MotorcycleFuelType = FuelSource.eFuelType.Octan95;
+        private const float k_MotorcycleTankCapacity = 5.5f;
+        private const int k_MotorcycleAmountOfTires = 2;
+        private const float k_MotorcycleTireMaxAmountOfPressure = 28.0f;
+        private const float k_MotorcycleMaxBattaryCapacityInHours = 1.6f; //todo: Go over all create functions make sure didnt typo care instead of motorcycle etc'
+
+
+        private static Vehicle createElectricCarModel()
         {
-            const float k_MaxAllowedWheelPSI = 32;
-            const byte k_NumOfTires = 4;
-
-            List<Tire> tires = r_TiresFactory.ProduceTires(i_TireManufacturer, k_NumOfTires, k_MaxAllowedWheelPSI);
-            VehicleRegistrationInfo vehicleInfo = new VehicleRegistrationInfo(i_ModelName, i_PlateNumber);
-
-            if (i_PowerSourceType == ePowerSource.Electrical)
-            {
-                MakeElectricCar(vehicleInfo, tires, i_DoorsAmount, i_Color);
-            }
-            else if(i_PowerSourceType == ePowerSource.Fuel)
-            {
-                MakeFuelCar(vehicleInfo, tires, i_DoorsAmount, i_Color);
-            }
-            else
-            {
-                throw new ArgumentException();
-            }
+            return new Car(
+                            new ElectricalSource(k_CarMaxBattaryCapacityInHours),
+                            TiresFactory.ProduceTires(k_DefaultTiresManufacturerName, k_CarAmountOfTires, k_CarTireMaxAmountOfPressure)
+                        );
         }
 
-        public void CreateTruck(string i_ModelName, string i_PlateNumber, ePowerSource i_PowerSourceType, string i_TireManufacturer,
-            bool i_IsCarryingDangerousMaterials, float i_MaxCarryingWeightAllowed)
+        private static Vehicle createFuelCarModel()
         {
-            const float k_MaxAllowedWheelPSI = 34;
-            const byte k_NumOfTires = 12;
-
-            List<Tire> tires = r_TiresFactory.ProduceTires(i_TireManufacturer, k_NumOfTires, k_MaxAllowedWheelPSI);
-            VehicleRegistrationInfo vehicleInfo = new VehicleRegistrationInfo(i_ModelName, i_PlateNumber);
-
-            if (i_PowerSourceType == ePowerSource.Fuel)
-            {
-                MakeFuelTrack(vehicleInfo, tires, i_IsCarryingDangerousMaterials, i_MaxCarryingWeightAllowed);
-            }
-            else
-            {
-                throw new ArgumentException();
-            }
+            return new Car(
+                            new FuelSource(k_CarFuelType, k_CarTankCapacity),
+                            TiresFactory.ProduceTires(k_DefaultTiresManufacturerName, k_CarAmountOfTires, k_CarTireMaxAmountOfPressure)
+                        );
         }
 
-        public Car MakeFuelCar(VehicleRegistrationInfo i_VehicleInfo, List<Tire> i_Tires, Car.eDoorsAmount i_DoorsAmount, Car.eColor i_Color)
+        
+        private static Vehicle createTruckModel()
         {
-            const FuelSource.eFuelType k_CarFuelType = FuelSource.eFuelType.Octan98;
-            const float k_CarTankCapacity = 50f;
-
-            return new Car(new FuelSource(k_CarFuelType, k_CarTankCapacity), i_VehicleInfo, i_Tires, i_DoorsAmount, i_Color);
+            return new Truck(
+                            new FuelSource(k_TruckFuelType, k_TruckTankCapacity),
+                            TiresFactory.ProduceTires(k_DefaultTiresManufacturerName, k_TruckAmountOfTires, k_TruckTireMaxAmountOfPressure)
+                        );
         }
-        public Truck MakeFuelTrack(VehicleRegistrationInfo i_VehicleInfo, List<Tire> i_Tires, bool i_IsCarryingDangerousMaterials, float i_MaxCarryingWeightAllowed)
-        {
-            const FuelSource.eFuelType k_TrackFuelType = FuelSource.eFuelType.Soler;
-            const float k_TruckTankCapacity = 130f;
 
-            return new Truck(new FuelSource(k_TrackFuelType, k_TruckTankCapacity), i_VehicleInfo, i_Tires, i_IsCarryingDangerousMaterials, i_MaxCarryingWeightAllowed);
+        private static Vehicle createElectricMotorcycleModel()
+        {
+            return new Motorcycle(
+                            new ElectricalSource(k_MotorcycleMaxBattaryCapacityInHours),
+                            TiresFactory.ProduceTires(k_DefaultTiresManufacturerName, k_MotorcycleAmountOfTires, k_MotorcycleTireMaxAmountOfPressure)
+                        );
         }
-        public Motorcycle MakeFuelMotorcycle(VehicleRegistrationInfo i_VehicleInfo, List<Tire> i_Tires, Motorcycle.eLicenseType i_LisenceType, int i_EngineVolumeCC)
-        {
-            const FuelSource.eFuelType k_MotorcycleFuelType = FuelSource.eFuelType.Octan95;
-            const float k_MotorcycleTankCapacity = 5.5f;
 
-            return new Motorcycle(new FuelSource(k_MotorcycleFuelType, k_MotorcycleTankCapacity), i_VehicleInfo, i_Tires, i_LisenceType, i_EngineVolumeCC);
-        }
-        public Car MakeElectricCar(VehicleRegistrationInfo i_VehicleInfo, List<Tire> i_Tires, Car.eDoorsAmount i_DoorsAmount, Car.eColor i_Color)
+        private static Vehicle createFuelMotorcycleModel()
         {
-            const float k_MaxBattaryCapacityInHours = 2.8f;
-
-            return new Car(new ElectricalSource(k_MaxBattaryCapacityInHours), i_VehicleInfo, i_Tires, i_DoorsAmount, i_Color);
-        }
-        public Motorcycle MakeElectricMotorcycle(VehicleRegistrationInfo i_VehicleInfo, List<Tire> i_Tires, Motorcycle.eLicenseType i_LisenceType, int i_EngineVolumeCC)
-        {
-            const float k_MaxBattaryCapacityInHours = 1.6f;
-
-            return new Motorcycle(new ElectricalSource(k_MaxBattaryCapacityInHours), i_VehicleInfo, i_Tires, i_LisenceType, i_EngineVolumeCC);
+            return new Motorcycle(
+                            new FuelSource(k_MotorcycleFuelType, k_MotorcycleTankCapacity),
+                            TiresFactory.ProduceTires(k_DefaultTiresManufacturerName, k_MotorcycleAmountOfTires, k_MotorcycleTireMaxAmountOfPressure)
+                        );
         }
     }
 }

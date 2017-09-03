@@ -13,7 +13,7 @@ namespace GarageLogic.VehicleParts.PowerSources
         }
 
         readonly eFuelType r_FuelType;
-        LimitedRangeValue m_FuelLevel;
+        LimitedRangeValue m_FuelLevel; //todo: readonly
 
         public override float CurrentPowerLevel
         {
