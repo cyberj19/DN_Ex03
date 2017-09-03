@@ -20,7 +20,7 @@ namespace ConsoleUI.Utils
         private static void printPowerSource(Vehicle i_Vehicle)
         {
             PowerSource power = i_Vehicle.PowerSource;
-
+            //todo: doing it twice!!!!! use as instead . here and everywhere else. according to video
             if (power is ElectricalSource)
             {
                 printElectricalPowerSource((ElectricalSource)power);

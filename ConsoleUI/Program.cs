@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ConsoleUI
 {
-    static class Entry
+    static class Program
     {
         public static void Main()
         {

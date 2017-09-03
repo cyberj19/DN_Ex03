@@ -58,7 +58,7 @@ namespace ConsoleUI
                     outStr = "Bad vehicle's plate number. Please insert again:";
                 }
 
-                retVehicle = m_GarageManager.GetVehicle(plateNumber);
+                retVehicle = m_GarageManager.GetVehicleRecord(plateNumber.ToString());
             }
             while (retVehicle == null);
 
@@ -191,11 +191,11 @@ namespace ConsoleUI
 
             return filterList;
         }
-
+        //todo: user input for initial values
         private bool handleShowAllVehicles()
         {
             List<VehicleRecord.eStatus> nonAllowedVehicleFilter = getVehicleStatusFilterInformation();
-            List<VehicleRecord> vehicleRecords = m_GarageManager.GetVehicles(nonAllowedVehicleFilter);
+            List<VehicleRecord> vehicleRecords = m_GarageManager.GetVehicleRecords(nonAllowedVehicleFilter);
 
             foreach (VehicleRecord vehicleRecord in vehicleRecords)
             {
