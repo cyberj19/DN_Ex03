@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace ConsoleUI
 {
     class MenuOption
-    {
+    {//todo; There's a class doing this.. but without the strings
         public enum eOption
         {
             InsertNewVehicle = 0,

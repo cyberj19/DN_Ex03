@@ -243,15 +243,22 @@ namespace ConsoleUI
             ElectricalSource electricSource;
             float timeToCharge;
 
-            if (!(powerSource is ElectricalSource))
+            if (powerSource.EnergyPercent < 0.0001)
             {
-                throw new ArgumentException();
+                BasicConsoleOperations.WriteString("Already in full Capacity.");
             }
+            else
+            {
+                if (!(powerSource is ElectricalSource))
+                {
+                    throw new ArgumentException();
+                }
 
-            electricSource = (ElectricalSource)powerSource;
-            //todo: sure needs in hours?
-            timeToCharge = BasicConsoleOperations.GetPositiveFloatFromUserWithMaxVal("Please insert time to charge in hours:", powerSource.PowerCapacity - powerSource.CurrentPowerLevel);
-            electricSource.Recharge(timeToCharge);
+                electricSource = (ElectricalSource)powerSource;
+                //todo: sure needs in hours?
+                timeToCharge = BasicConsoleOperations.GetPositiveFloatFromUserWithMaxVal("Please insert time to charge in hours:", powerSource.PowerCapacity - powerSource.CurrentPowerLevel);
+                electricSource.Recharge(timeToCharge);
+            }
         }
 
         private void handleRefuelCar(VehicleRecord i_VehicleRecord)
@@ -261,15 +268,23 @@ namespace ConsoleUI
             FuelSource.eFuelType usedFuelType;
             float amountToFill;
 
-            if (!(powerSource is FuelSource))
+            //todo: const
+            if (powerSource.EnergyPercent < 0.0001)
             {
-                throw new ArgumentException();
+                BasicConsoleOperations.WriteString("Already in full fuel.");
             }
+            else
+            {
+                if (!(powerSource is FuelSource))
+                {
+                    throw new ArgumentException();
+                }
 
-            fuelSource = (FuelSource)powerSource;
-            usedFuelType = BasicConsoleOperations.GetEnumChoice<FuelSource.eFuelType>("Please choose fuel type:");
-            amountToFill = BasicConsoleOperations.GetPositiveFloatFromUserWithMaxVal("Please insert amount to fuel in liters:", powerSource.PowerCapacity - powerSource.CurrentPowerLevel);
-            fuelSource.Refuel(usedFuelType, amountToFill);
+                fuelSource = (FuelSource)powerSource;
+                usedFuelType = BasicConsoleOperations.GetEnumChoice<FuelSource.eFuelType>("Please choose fuel type:");
+                amountToFill = BasicConsoleOperations.GetPositiveFloatFromUserWithMaxVal("Please insert amount to fuel in liters:", powerSource.PowerCapacity - powerSource.CurrentPowerLevel);
+                fuelSource.Refuel(usedFuelType, amountToFill);
+            }
         }
 
 

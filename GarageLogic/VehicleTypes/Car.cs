@@ -15,7 +15,7 @@ namespace GarageLogic.VehicleTypes
 
         public enum eDoorsAmount
         {
-            Two = 2,
+            Two,
             Three,
             Four,
             Five
