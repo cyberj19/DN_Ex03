@@ -6,7 +6,14 @@
         {
             get
             {
-                return CurrentPowerLevel / PowerCapacity;
+                float percent = CurrentPowerLevel / PowerCapacity;
+
+                if (percent > 0.999f)
+                {
+                    percent = 1.0f;
+                }
+
+                return percent;
             }
         }
 
