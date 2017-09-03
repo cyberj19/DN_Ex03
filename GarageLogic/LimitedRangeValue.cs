@@ -26,7 +26,7 @@ namespace GarageLogic
                 //todo: BAD, not current amount but the value itself!
                 if ((value > r_MaxAmount) || (value < k_MinAmount))
                 {
-                    throw new ValueOutOfRangeException();
+                    throw new ValueOutOfRangeException(k_MinAmount, r_MaxAmount);
                 }
                 m_CurrentAmount = value;
             }
