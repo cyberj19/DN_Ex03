@@ -9,7 +9,7 @@ namespace GarageLogic.VehicleTypes
     public class TruckInfo
     {
         private readonly bool r_IsCarryingDangerousMaterials;
-        private readonly float r_MaxCarryingWeightAllowed;
+        private readonly float r_MaxCarryingWeightAllowedKg;
 
         public static TruckInfo Default
         {
@@ -26,18 +26,18 @@ namespace GarageLogic.VehicleTypes
             }
         }
 
-        public float MaxCarryingWeightAllowed
+        public float MaxCarryingWeightAllowedKg
         {
             get
             {
-                return r_MaxCarryingWeightAllowed;
+                return r_MaxCarryingWeightAllowedKg;
             }
         }
 
         public TruckInfo(bool i_IsCarryingDangerousMaterials, float i_MaxCarryingWeightAllowed)
         {
             r_IsCarryingDangerousMaterials = i_IsCarryingDangerousMaterials;
-            r_MaxCarryingWeightAllowed = i_MaxCarryingWeightAllowed;
+            r_MaxCarryingWeightAllowedKg = i_MaxCarryingWeightAllowed;
         }
 
 

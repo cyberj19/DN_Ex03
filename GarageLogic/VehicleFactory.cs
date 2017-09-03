@@ -10,10 +10,10 @@ using System.Threading.Tasks;
 
 namespace GarageLogic
 {
-    class VehicleFactory
+    public class VehicleFactory
     {
         public enum eSupportedVehicle 
-        {
+        {//todo: make sure this is defaulted to 0
             ElectricCar,
             ElectricMotorcycle,
             RegularCar,
@@ -22,6 +22,11 @@ namespace GarageLogic
         }
 
         Dictionary<eSupportedVehicle, Vehicle> m_VehicleModels;
+
+        public Vehicle GetModel(eSupportedVehicle i_VehicleModel)
+        {
+            return m_VehicleModels[i_VehicleModel];
+        }
 
         public VehicleFactory()
         {
@@ -48,15 +53,14 @@ namespace GarageLogic
         public Vehicle Create(eSupportedVehicle i_VehicleModel, VehicleRegistrationInfo i_VehicleInfo,
                                 object i_SpecificInfo,
                                 float i_InitialPowerSourceValue,
-                                string[] i_TiresManufacturerName, float[] i_TiresInitialAirValue)
+                                TiresInfo i_TiresInfo)
         {
             Vehicle model = m_VehicleModels[i_VehicleModel];
             PowerSource newPowerSource = createPowerSourceFromModel(model, i_InitialPowerSourceValue);
-            List<Tire> newTires = createTiresFromModel(model, i_TiresManufacturerName);
-            Type modelType = model.GetType();
+            List<Tire> newTires = createTiresFromModel(model, i_TiresInfo.TiresManufacturerNameArray);
             Vehicle newVehicle = null;
-
-            if (modelType == typeof(Car))
+            //todo: perhaps needs to check is a????????????? Might check only if its a vehicle?>....
+            if (model is Car)
             {
                 CarInfo carInfo = i_SpecificInfo as CarInfo;
 
@@ -67,7 +71,7 @@ namespace GarageLogic
 
                 newVehicle = createCarFromModel(i_VehicleInfo, carInfo, newPowerSource, newTires);
             }
-            else if (modelType == typeof(Motorcycle))
+            else if (model is Motorcycle)
             {
                 MotorcycleInfo motorcycleInfo = i_SpecificInfo as MotorcycleInfo;
 
@@ -78,7 +82,7 @@ namespace GarageLogic
 
                 newVehicle = createMotorcycleFromModel(i_VehicleInfo, motorcycleInfo, newPowerSource, newTires);
             }
-            else if (modelType == typeof(Truck))
+            else if (model is Truck)
             {
                 TruckInfo truckInfo = i_SpecificInfo as TruckInfo;
 
@@ -88,6 +92,12 @@ namespace GarageLogic
                 }
 
                 newVehicle = createTruckFromModel(i_VehicleInfo, truckInfo, newPowerSource, newTires);
+            }
+
+            //put air in tires
+            for (int i = 0; i < newTires.Count; i++)
+            {
+                newTires[i].InflateAir(i_TiresInfo.TiresInitialAirValue[i]);
             }
 
             return newVehicle;

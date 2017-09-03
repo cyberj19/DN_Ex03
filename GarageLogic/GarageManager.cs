@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace GarageLogic
 {
@@ -10,6 +11,21 @@ namespace GarageLogic
         public static void ShowVehiclesArrangedByRegistrationNumber()
         {
 
+        }
+
+        public GarageManager()
+        {
+            m_VehicleRecords = new List<VehicleRecord>();
+        }
+
+        public void InsertRecord(string i_OwnerName, string i_OwnerPhoneNumber, Vehicle i_Vehicle)
+        {
+            if (GetVehicleRecord(i_Vehicle.PlateNumber) != null)
+            {
+                throw new ArgumentException();
+            }
+
+            m_VehicleRecords.Add(new VehicleRecord(i_OwnerName, i_OwnerPhoneNumber, i_Vehicle));
         }
 
         public List<VehicleRecord> GetVehicleRecords(List<VehicleRecord.eStatus> i_FilterOutList)

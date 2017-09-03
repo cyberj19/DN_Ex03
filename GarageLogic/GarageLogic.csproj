@@ -43,6 +43,7 @@
     <Compile Include="PowerSourceInputParam.cs" />
     <Compile Include="TiresFactory.cs" />
     <Compile Include="VehicleFactory.cs" />
+    <Compile Include="VehicleParts\TiresInfo.cs" />
     <Compile Include="VehicleRegistrationInfo.cs" />
     <Compile Include="VehicleTypes\CarInfo.cs" />
     <Compile Include="VehicleTypes\Motorcycle.cs" />

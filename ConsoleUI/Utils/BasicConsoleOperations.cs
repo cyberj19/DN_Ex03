@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace ConsoleUI.Utils
@@ -30,6 +31,39 @@ namespace ConsoleUI.Utils
             Console.WriteLine(i_MsgStr);
 
             return System.Console.ReadLine();
+        }
+
+        private static bool isNumericString(string i_Str)
+        {
+            return i_Str.All(char.IsDigit);
+        }
+        private static bool isNumericStringOfLength(string i_Str, uint i_NumDigits)
+        {
+            return (i_Str.Length == i_NumDigits) && isNumericString(i_Str);
+        }
+
+        public static string GetNumericStringOfLength(string i_MsgStr, uint i_NumDigits)
+        {
+            string currInput = null;
+            string currMsgStr = i_MsgStr;
+
+            do
+            {
+                currInput = GetString(currMsgStr);
+
+                if (isNumericStringOfLength(currInput, i_NumDigits))
+                {
+                    break;
+                }
+
+                if (currMsgStr == i_MsgStr)
+                {
+                    currMsgStr = "Bad Number. Please insert again: ";
+                }
+            }
+            while (true);
+
+            return currInput;
         }
 
         // Creates a string array from enum names
@@ -161,6 +195,32 @@ namespace ConsoleUI.Utils
             return retUserInput.Value;
         }
 
+        //todo: Make sure in the calling that its ok to enter MaxVal! (Max val == max val and not max val == max val - 1)
+        public static float GetPositiveFloatFromUserWithMaxVal(string i_MessageForUser, float i_MaxVal)
+        {
+        
+            string initialMsgToUser = string.Format("{0} (Max value is {1})", i_MessageForUser ,i_MaxVal.ToString());
+            string currMsg = initialMsgToUser;
+            float retVal;
+
+            do
+            {
+                retVal = GetPositiveFloatFromUser(currMsg);
+
+                if (retVal <= i_MaxVal)
+                {
+                    break;
+                }
+
+                if (currMsg == initialMsgToUser)
+                {
+                    currMsg = "Number is above range. Please insert again:";
+                }
+            }
+            while (true);
+
+            return retVal;
+        }
         //todo: Duplication of code
         public static float GetPositiveFloatFromUser(string i_MessageForUser)
         {
@@ -173,7 +233,7 @@ namespace ConsoleUI.Utils
             do
             {
                 userInputStr = System.Console.ReadLine();
-                isValidInput = float.TryParse(userInputStr, out currUserNumericInput) && currUserNumericInput > 0.0f);
+                isValidInput = float.TryParse(userInputStr, out currUserNumericInput) && (currUserNumericInput > 0.0f);
                 if (!isValidInput)
                 {
                     System.Console.WriteLine("Invalid input! Please try again:");
