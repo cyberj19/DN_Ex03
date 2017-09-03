@@ -111,11 +111,14 @@ namespace ConsoleUI.Utils
             }
         }
 
+        //todo: old line, make sure nowhere else             PositiveRange validRange = new PositiveRange(0, (uint)optionsStr.Length - k_DifferenceBetweenIndexAndSize);
+           //todo: the length is of chars..
+
         // Get an option from a string array
         public static uint GetOption(string i_UserMsg, string[] i_Options)
         {
             string optionsStr = generateChoiceStrFromArray(i_Options);
-            PositiveRange validRange = new PositiveRange(0, (uint)optionsStr.Length - k_DifferenceBetweenIndexAndSize);
+            PositiveRange validRange = new PositiveRange(0, (uint)i_Options.Length - k_DifferenceBetweenIndexAndSize);
 
             Console.WriteLine(i_UserMsg);
 
@@ -126,7 +129,7 @@ namespace ConsoleUI.Utils
         public static List<uint> GetMultipleOptions(string i_UserMsg, string[] i_Options)
         {
             string optionsStr = generateChoiceStrFromArray(i_Options);
-            PositiveRange validRange = new PositiveRange(0, (uint)optionsStr.Length - k_DifferenceBetweenIndexAndSize);
+            PositiveRange validRange = new PositiveRange(0, (uint)i_Options.Length - k_DifferenceBetweenIndexAndSize);
 
             Console.WriteLine(i_UserMsg);
 
@@ -176,7 +179,7 @@ namespace ConsoleUI.Utils
             bool isValidInput;
             uint? retUserInput = null;
 
-            System.Console.WriteLine(i_MessageForUser);
+            System.Console.WriteLine(string.Format("{0} (Range: {1}-{2})" , i_MessageForUser, i_InputRange.Min, i_InputRange.Max));
             do
             {
                 userInputStr = System.Console.ReadLine();
@@ -193,6 +196,12 @@ namespace ConsoleUI.Utils
             while (!isValidInput);
 
             return retUserInput.Value;
+        }
+
+
+        public static void NewLine()
+        {
+            WriteString(string.Empty);
         }
 
         //todo: Make sure in the calling that its ok to enter MaxVal! (Max val == max val and not max val == max val - 1)

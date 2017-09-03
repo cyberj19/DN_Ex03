@@ -38,6 +38,7 @@ namespace GarageLogic
         {
             return typeof(VehicleFactory).GetMethod(i_MethodName);
         }
+        //todo: for some reason its allowed to insert a vehicle with 0 tires?
 
         private void initDictionary()
         {

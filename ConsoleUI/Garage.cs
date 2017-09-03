@@ -33,8 +33,15 @@ namespace ConsoleUI
 
                 if (!handleMenuOptionRequest(menuOptionSelect))
                 {
+                    BasicConsoleOperations.WriteString("Operation has failed!");
                     //todo: Write about operation failed
                 }
+                else
+                {
+                    BasicConsoleOperations.WriteString("Operation succeeded!");
+                }
+
+                BasicConsoleOperations.NewLine();
             }
         }
 
@@ -73,32 +80,39 @@ namespace ConsoleUI
         private bool handleMenuOptionRequest(MenuOption.eOption i_Option)
         {
             bool hasOperationSucceeded = true;
-
-            //todo: need to catch all exception here
-            //todo: should throw invalid input instead of the bool above
-            switch (i_Option)
+            try //todo; support other types of exceptions aswell
             {
-                case MenuOption.eOption.InsertNewVehicle:
-                    handleInsertNewVehicle();
-                    break;
-                case MenuOption.eOption.ShowAllVehiclesId:
-                    handleShowAllVehicles();
-                    break;
-                case MenuOption.eOption.ModifyVehicleState:
-                    handleModifyVehicleState(getVehicleRecordFromLicensePlate());
-                    break;
-               case MenuOption.eOption.FillTireAir:
-                    handleFillTireAir(getVehicleRecordFromLicensePlate());
-                    break;
-               case MenuOption.eOption.RefuelCar:
-                    handleRefuelCar(getVehicleRecordFromLicensePlate());
-                    break;
-               case MenuOption.eOption.ChargeCar:
-                    handleChargeCar(getVehicleRecordFromLicensePlate());
-                    break;
-               case MenuOption.eOption.ShowVehicleInformation:
-                    handleShowVehicleInformation(getVehicleRecordFromLicensePlate());
-                    break;
+                //todo: need to catch all exception here
+                //todo: should throw invalid input instead of the bool above
+                switch (i_Option)
+                {
+                    case MenuOption.eOption.InsertNewVehicle:
+                        handleInsertNewVehicle();
+                        break;
+                    case MenuOption.eOption.ShowAllVehiclesId:
+                        handleShowAllVehicles();
+                        break;
+                    case MenuOption.eOption.ModifyVehicleState:
+                        handleModifyVehicleState(getVehicleRecordFromLicensePlate());
+                        break;
+                    case MenuOption.eOption.FillTireAir:
+                        handleFillTireAir(getVehicleRecordFromLicensePlate());
+                        break;
+                    case MenuOption.eOption.RefuelCar:
+                        handleRefuelCar(getVehicleRecordFromLicensePlate());
+                        break;
+                    case MenuOption.eOption.ChargeCar:
+                        handleChargeCar(getVehicleRecordFromLicensePlate());
+                        break;
+                    case MenuOption.eOption.ShowVehicleInformation:
+                        handleShowVehicleInformation(getVehicleRecordFromLicensePlate());
+                        break;
+                }
+            }
+            catch (ArgumentException aexcp)
+            {
+                BasicConsoleOperations.WriteString("Argument Exception: Bad arguments!");
+                hasOperationSucceeded = false;
             }
 
             return hasOperationSucceeded;
@@ -192,19 +206,16 @@ namespace ConsoleUI
 
         private void printRecordStatus(string i_Msg, VehicleRecord i_VehicleRecord)
         {
-            BasicConsoleOperations.WriteString(i_Msg);
-            BasicConsoleOperations.WriteString(i_VehicleRecord.Status.ToString());
+            BasicConsoleOperations.WriteString(string.Format("{0} {1}", i_Msg, i_VehicleRecord.Status.ToString()));
         }
 
         //todo: Make sure all detatil in design show up
         private void handleShowVehicleInformation(VehicleRecord i_VehicleRecord)
         {
-            string ownerStr = string.Format("Vehicle's Owner: {0} {2} Vehicle's Owner Phone number: {1}", i_VehicleRecord.OwnerName, i_VehicleRecord.OwnerPhoneNumber, Environment.NewLine);
+            string ownerStr = string.Format("Vehicle's Owner: {0}{2}Vehicle's Owner Phone number: {1}", i_VehicleRecord.OwnerName, i_VehicleRecord.OwnerPhoneNumber, Environment.NewLine);
 
             printRecordStatus("Vehicle Garage Status:", i_VehicleRecord);
             BasicConsoleOperations.WriteString(ownerStr);
-            
-
             VehiclePrintUtils.PrintVehicle(i_VehicleRecord.Vehicle);
         }
 

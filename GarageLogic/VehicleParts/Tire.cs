@@ -1,6 +1,10 @@
 ﻿namespace GarageLogic.VehicleParts
 {
-    public struct Tire
+
+    //todo: rethink if this should be struct because on foreach loop it doesnt change (not by ref.........)
+    //todo: meanwhile change to class. need to make sure it doesnt ruin any other things. consider also turning to classes other
+    //todo: objects. And make sure foreach loop are working ok with all our objects
+    public class Tire
     {
         readonly string r_ManufacturerName;
         LimitedRangeValue m_AirPressure;
@@ -31,7 +35,8 @@
 
         public void InflateAir(float i_AdditionPSI)
         {
-            m_AirPressure.CurrentAmount = i_AdditionPSI;
+            //todo?
+            m_AirPressure.CurrentAmount = i_AdditionPSI + m_AirPressure.CurrentAmount;
         }
 
         public Tire(float i_MaxPSI, string i_ManufacturerName)

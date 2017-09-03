@@ -11,9 +11,9 @@ namespace GarageLogic
         {
             List<Tire> tires = new List<Tire>(i_TiresAmount);
 
-            for(int i = 0; i< tires.Count; ++i)
+            for(int i = 0; i < i_TiresAmount; ++i)
             {
-                tires[i] = new Tire(i_MaxAllowedAirPressure, i_ManufacturerName);
+                tires.Add(new Tire(i_MaxAllowedAirPressure, i_ManufacturerName));
             }
 
             return tires;

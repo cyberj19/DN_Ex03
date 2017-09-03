@@ -28,6 +28,22 @@ namespace GarageLogic.VehicleTypes
 
         private readonly CarInfo r_CarInfo;
        
+        public eColor Color
+        {
+            get
+            {
+                return r_CarInfo.Color;
+            }
+        }
+
+        public eDoorsAmount DoorsAmount
+        {
+            get
+            {
+                return r_CarInfo.DoorsAmount;
+            }
+        }
+
         //todo: Why number of doors is in an enum? Tommorow i would want a car with 7 doors. Why isnt this possible?
         
         public Car(PowerSource i_PowerSource, VehicleRegistrationInfo i_VehicleInfo, List<Tire> i_Tires, CarInfo i_CarInfo) 

@@ -22,11 +22,12 @@ namespace GarageLogic
 
             set
             {
+                //todo: BAD, not current amount but the value itself!
                 if (((m_CurrentAmount + value) > r_MaxAmount) || value < k_MinAmount)
                 {
                     throw new ValueOutOfRangeException();
                 }
-                m_CurrentAmount += value;
+                m_CurrentAmount = value;
             }
         }
         public float MaxAmount
