@@ -1,5 +1,6 @@
 ﻿namespace GarageLogic.VehicleParts
 {
+    // Represents vehicle power source (Engine + Power Capacitor)
     public abstract class PowerSource
     {
         public float EnergyPercent

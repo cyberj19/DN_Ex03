@@ -1,6 +1,4 @@
-﻿using GarageLogic.Exceptions;
-
-namespace GarageLogic.VehicleParts.PowerSources
+﻿namespace GarageLogic.VehicleParts.PowerSources
 {
     public class ElectricalSource : PowerSource
     {
@@ -21,14 +19,16 @@ namespace GarageLogic.VehicleParts.PowerSources
                 return m_BattaryLevel.MaxAmount;
             }
         }
+
         public ElectricalSource(float i_MaxBattaryTimeInHours)
         {
             m_BattaryLevel = new LimitedRangeValue(i_MaxBattaryTimeInHours);
         }
+
+        // Charge battery
         public void Recharge(float m_ChargeHoursToAdd)
         {
             m_BattaryLevel.CurrentAmount += m_ChargeHoursToAdd;
         }
-
     }
 }

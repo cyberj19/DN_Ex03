@@ -1,5 +1,6 @@
 ﻿namespace GarageLogic
 {
+    // Represents a garage record
     public class VehicleRecord
     {
         public enum eStatus
@@ -9,17 +10,16 @@
             PaymentReceived
         }
 
-        //todo: Readonly?
-        string m_OwnerName;
-        string m_OwnerPhoneNumber;
-        eStatus m_VehicleStatus;
-        Vehicle m_Vehicle;
+        private readonly string r_OwnerName;
+        private readonly string r_OwnerPhoneNumber;
+        private readonly Vehicle r_Vehicle;
+        private eStatus m_VehicleStatus;
 
         public string OwnerName
         {
             get
             {
-                return m_OwnerName;
+                return r_OwnerName;
             }
         }
 
@@ -27,7 +27,7 @@
         {
             get
             {
-                return m_OwnerPhoneNumber;
+                return r_OwnerPhoneNumber;
             }
         }
 
@@ -47,16 +47,16 @@
         {
             get
             {
-                return m_Vehicle;
+                return r_Vehicle;
             }
         }
 
         public VehicleRecord(string i_OwnerName, string i_OwnerPhoneNumber, Vehicle i_Vehicle)
         {
-            m_Vehicle = i_Vehicle;
+            r_Vehicle = i_Vehicle;
             m_VehicleStatus = eStatus.InRepair; //todo: 100% sure that starting in this state and shouldnt ask user?
-            m_OwnerName = i_OwnerName;
-            m_OwnerPhoneNumber = i_OwnerPhoneNumber;
+            r_OwnerName = i_OwnerName;
+            r_OwnerPhoneNumber = i_OwnerPhoneNumber;
         }
     }
 }

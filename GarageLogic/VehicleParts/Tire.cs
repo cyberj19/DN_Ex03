@@ -6,7 +6,7 @@
     //todo: objects. And make sure foreach loop are working ok with all our objects
     public class Tire
     {
-        readonly string r_ManufacturerName;
+        private readonly string r_ManufacturerName;
         LimitedRangeValue m_AirPressure;
 
         public string ManufacturerName
@@ -33,10 +33,10 @@
             }
         }
 
+        // Fill up the tire
         public void InflateAir(float i_AdditionPSI)
         {
-            //todo?
-            m_AirPressure.CurrentAmount = i_AdditionPSI + m_AirPressure.CurrentAmount;
+            m_AirPressure.CurrentAmount += i_AdditionPSI;
         }
 
         public Tire(float i_MaxPSI, string i_ManufacturerName)
@@ -44,6 +44,5 @@
             r_ManufacturerName = i_ManufacturerName;
             m_AirPressure = new LimitedRangeValue(i_MaxPSI);
         }
-
     }
 }

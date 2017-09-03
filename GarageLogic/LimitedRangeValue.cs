@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GarageLogic.Exceptions;
+﻿using GarageLogic.Exceptions;
 
 namespace GarageLogic
 {
     //todo: This is the positive range class. Perhaps change it to template and use it instead?...
     struct LimitedRangeValue
     {
-        readonly float r_MaxAmount;
-        const float k_MinAmount = 0f;
-        float m_CurrentAmount;
+        private const float k_MinAmount = 0f;
+        private readonly float r_MaxAmount;
+        private float m_CurrentAmount;
 
         public float CurrentAmount
         {
@@ -23,10 +18,9 @@ namespace GarageLogic
 
             set
             {
-                //todo: BAD, not current amount but the value itself!
                 if ((value > r_MaxAmount) || (value < k_MinAmount))
                 {
-                    throw new ValueOutOfRangeException();
+                    throw new ValueOutOfRangeException(k_MinAmount, r_MaxAmount);
                 }
                 m_CurrentAmount = value;
             }

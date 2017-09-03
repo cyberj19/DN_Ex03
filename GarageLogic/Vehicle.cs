@@ -5,15 +5,15 @@ namespace GarageLogic
 {
     public abstract class Vehicle
     {
-        readonly VehicleRegistrationInfo r_Info;
-        protected List<Tire> m_Tires;
-        protected PowerSource m_PowerSource;
+        private readonly VehicleRegistrationInfo r_Info;
+        private readonly List<Tire> r_Tires; //todo: changed to read only make sure can still change inner itemss
+        private readonly PowerSource r_PowerSource;
 
         public List<Tire> Tires
         {
             get
             {
-                return m_Tires;
+                return r_Tires;
             }
         }
 
@@ -21,7 +21,7 @@ namespace GarageLogic
         {
             get
             {
-                return m_PowerSource;
+                return r_PowerSource;
             }
         }
 
@@ -29,7 +29,7 @@ namespace GarageLogic
         {
             get
             {
-                return m_PowerSource.EnergyPercent;
+                return r_PowerSource.EnergyPercent;
             }
         }
 
@@ -52,8 +52,8 @@ namespace GarageLogic
         public Vehicle(PowerSource i_PowerSource, VehicleRegistrationInfo i_VehicleInfo, List<Tire> i_Tires)
         {
             r_Info = i_VehicleInfo;
-            m_PowerSource = i_PowerSource;
-            m_Tires = i_Tires;
+            r_PowerSource = i_PowerSource;
+            r_Tires = i_Tires;
         }
 
         public override int GetHashCode()

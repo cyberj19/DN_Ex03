@@ -12,8 +12,8 @@ namespace GarageLogic.VehicleParts.PowerSources
             Soler
         }
 
-        readonly eFuelType r_FuelType;
-        LimitedRangeValue m_FuelLevel; //todo: readonly
+        private readonly eFuelType r_FuelType;
+        private LimitedRangeValue m_FuelLevel;
 
         public override float CurrentPowerLevel
         {
@@ -45,12 +45,14 @@ namespace GarageLogic.VehicleParts.PowerSources
             m_FuelLevel = new LimitedRangeValue(i_MaxCapacityInLiters);
         }
 
+        // Fuel power source
         public void Refuel(eFuelType i_FuelType, float i_FuelLitersToAdd)
         {
             validateFuelType(i_FuelType);
             m_FuelLevel.CurrentAmount += i_FuelLitersToAdd;
         }
 
+        // validate using correct fuel
         private void validateFuelType(eFuelType i_FuelType)
         {
             if (i_FuelType != r_FuelType)

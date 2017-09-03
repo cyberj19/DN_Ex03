@@ -4,9 +4,9 @@ using System;
 
 namespace GarageLogic
 {
-    class TiresFactory
+    static class TiresFactory
     {
-        //todo: staic is ok?..
+        // Create tires
         public static List<Tire> ProduceTires(string i_ManufacturerName, int i_TiresAmount, float i_MaxAllowedAirPressure)
         {
             List<Tire> tires = new List<Tire>(i_TiresAmount);
@@ -19,6 +19,7 @@ namespace GarageLogic
             return tires;
         }
 
+        // Create new tires according to a "recipe" of already-existing tires
         public static List<Tire> ProductTiresAccordingToExisting(string[] i_NewManufacturerNames, List<Tire> i_ExistingTires)
         {
             List<Tire> newTires = new List<Tire>(i_NewManufacturerNames.Length);

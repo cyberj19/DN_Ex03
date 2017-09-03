@@ -1,5 +1,6 @@
 ﻿namespace GarageLogic
 {
+    // Registration info of each vehicle
     public struct VehicleRegistrationInfo
     {
         readonly string r_ModelName;
