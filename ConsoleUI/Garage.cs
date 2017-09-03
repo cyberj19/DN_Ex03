@@ -14,6 +14,7 @@ namespace ConsoleUI
     class Garage
     {
         //todo:
+        private const int k_FirstLoopRun = 0;
         private const uint k_MaxPlateNumber = 9999999; // 7 digit number
         private GarageManager m_GarageManager = new GarageManager();
         private readonly VehicleFactory m_Factory = new VehicleFactory();
@@ -197,45 +198,31 @@ namespace ConsoleUI
             int numTires = model.Tires.Count;
             string[] tiresManufacturerNames = new string[numTires];
             float[] tiresInitialAirValues = new float[numTires];
-            bool isSameTiresManufacturerName = BasicConsoleOperations.PromptQuestion("Does all the tires are of the same manufacturer?");
-            bool isSameTiresInitialAirValue = BasicConsoleOperations.PromptQuestion("Does all the tires have the same AirPressure?");
-            string tiresManufacturerName = ""; //init
-            float tiresInitialAirValue = 0; //init
-            //todo: accessing first item, not sure if best way to do it..
-
-
+            bool areAllTiresSameType = false;
+  
             for (int i = 0; i < numTires; i++)
             {
-                if (!isSameTiresInitialAirValue || !isSameTiresManufacturerName)
+                if (!areAllTiresSameType)
                 {
                     BasicConsoleOperations.WriteString("_______");
                     BasicConsoleOperations.WriteString(string.Format("Entering data for tire number: {0}", i + 1));
+                    tiresManufacturerNames[i] = BasicConsoleOperations.GetString("Please insert manufacturer name:");
+                    tiresInitialAirValues[i] = BasicConsoleOperations.GetPositiveFloatFromUserWithMaxVal("Please insert initial air value", model.Tires[0].MaxPSI);
 
-                }
-                if (isSameTiresManufacturerName && i > 0)
-                {
-                    tiresManufacturerNames[i] = tiresManufacturerName;
+                    if (i == k_FirstLoopRun)
+                    {
+                        areAllTiresSameType = BasicConsoleOperations.PromptQuestion("Are all tires the same? (Automatic fillup)");
+                    }
                 }
                 else
                 {
-                    tiresManufacturerName = tiresManufacturerNames[i] = BasicConsoleOperations.GetString("Please insert manufacturer name:");
+                    tiresManufacturerNames[i] = tiresManufacturerNames[0];
+                    tiresInitialAirValues[i] = tiresInitialAirValues[0];
                 }
-                if (isSameTiresInitialAirValue && i > 0)
-                {
-                    tiresInitialAirValues[i] = tiresInitialAirValue;
-
-                }
-                else
-                {
-                    tiresInitialAirValue = tiresInitialAirValues[i] = BasicConsoleOperations.GetPositiveFloatFromUserWithMaxVal("Please insert initial air value", model.Tires[0].MaxPSI);
-                }
-                //todo: accessing first item, not sure if best way to do it..
             }
 
             return new TiresInfo(tiresManufacturerNames, tiresInitialAirValues);
         }
-
-        //GetPositiveFloatFromUserWithMaxVal
 
         private void printRecordStatus(string i_Msg, VehicleRecord i_VehicleRecord)
         {
