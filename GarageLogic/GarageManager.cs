@@ -9,7 +9,7 @@ namespace GarageLogic
         private const int k_StatusNotFound = -1;
         List<VehicleRecord> m_VehicleRecords;
 
-        public bool IsEmpty
+        public bool IsGarageEmpty
         {
             get
             {

@@ -85,7 +85,7 @@ namespace ConsoleUI
                 //todo: need to catch all exception here
                 //todo: should throw invalid input instead of the bool above
 
-                if (i_Option != MenuOption.eOption.InsertNewVehicle && Garage.IsEmpty)
+                if (i_Option != MenuOption.eOption.InsertNewVehicle && m_GarageManager.IsGarageEmpty)
                 {
                     Console.WriteLine("Garage is Empty, perhaps you want to insert a vehicle first?");
                 }
