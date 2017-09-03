@@ -155,7 +155,10 @@ namespace ConsoleUI
             VehicleFactory.eSupportedVehicle selectedVehicle = BasicConsoleOperations.GetEnumChoice<VehicleFactory.eSupportedVehicle>("Please choose vehicle type:");
             Vehicle model = m_Factory.GetModel(selectedVehicle);
             object vehicleSpecificInfo = getUserSpecificInfo(model);
-            TiresInfo tiresInfo = getUserTiresInfo(model);
+            TiresInfo tiresInfo =
+                (BasicConsoleOperations.PromptQuestion("Does all tires of the vehicle are the same?"))?
+                getUserAllTiresInfo(model) : getUserTiresInfoOneByOne(model);
+           
             float initialPowerSourceValue = BasicConsoleOperations.GetPositiveFloatFromUserWithMaxVal(
                 "Please insert initial power source value ", model.PowerSource.PowerCapacity
                 );
@@ -192,7 +195,7 @@ namespace ConsoleUI
             return retObj;
         }
 
-        private TiresInfo getUserTiresInfo(Vehicle model)
+        private TiresInfo getUserTiresInfoOneByOne(Vehicle model)
         {
             int numTires = model.Tires.Count;
             string[] tiresManufacturerName = new string[numTires];
@@ -210,6 +213,25 @@ namespace ConsoleUI
             return new TiresInfo(tiresManufacturerName, tiresInitialAirValue);
         }
 
+        private TiresInfo getUserAllTiresInfo(Vehicle model)
+        {
+            int numTires = model.Tires.Count;
+            string[] tiresManufacturerNames = new string[numTires];
+            float[] tiresInitialAirValues = new float[numTires];
+            string tiresManufacturerName = BasicConsoleOperations.GetString("Please insert tires manufacturer name:");
+            //todo: accessing first item, not sure if best way to do it..
+            float tiresInitialAirValue = BasicConsoleOperations.GetPositiveFloatFromUserWithMaxVal("Please insert tires initial air value", model.Tires[0].MaxPSI);
+
+            for (int i = 0; i < numTires; i++)
+            {
+                tiresManufacturerNames[i] = tiresManufacturerName;
+                //todo: accessing first item, not sure if best way to do it..
+                tiresInitialAirValues[i] = tiresInitialAirValue;
+            }
+
+            return new TiresInfo(tiresManufacturerNames, tiresInitialAirValues);
+        }
+        
         //GetPositiveFloatFromUserWithMaxVal
 
         private void printRecordStatus(string i_Msg, VehicleRecord i_VehicleRecord)
