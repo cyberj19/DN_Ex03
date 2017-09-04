@@ -33,7 +33,7 @@ namespace GarageLogic
         private const float k_MotorcycleTankCapacity = 5.5f;
         private const int k_MotorcycleAmountOfTires = 2;
         private const float k_MotorcycleTireMaxAmountOfPressure = 28.0f;
-        private const float k_MotorcycleMaxBattaryCapacityInHours = 1.6f; //todo: Go over all create functions make sure didnt typo care instead of motorcycle etc'
+        private const float k_MotorcycleMaxBattaryCapacityInHours = 1.6f;
         private readonly Dictionary<eSupportedVehicle, VehicleFactoryRecipe> r_VehicleModels;
 
         public VehicleFactory()
@@ -49,15 +49,13 @@ namespace GarageLogic
 
         public float GetTireMaxPsiInRecipe(eSupportedVehicle i_VehicleModel)
         {
-            return r_VehicleModels[i_VehicleModel].Tires[0].MaxPSI; //todo: cannot be without tires.....
+            return r_VehicleModels[i_VehicleModel].Tires[0].MaxPSI;
         }
 
         public int GetNumTiresInRecipe(eSupportedVehicle i_VehicleModel)
         {
             return r_VehicleModels[i_VehicleModel].Tires.Count;
         }
-
-        //todo: Before inserting vehicle to garage can check if all property full..
 
         public Vehicle CreateUnpopulatedVehicle(
                                                 eSupportedVehicle i_VehicleModel, 

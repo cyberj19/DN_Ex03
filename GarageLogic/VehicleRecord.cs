@@ -55,7 +55,7 @@
         public VehicleRecord(string i_OwnerName, string i_OwnerPhoneNumber, Vehicle i_Vehicle)
         {
             r_Vehicle = i_Vehicle;
-            m_VehicleStatus = eStatus.InRepair; //todo: 100% sure that starting in this state and shouldnt ask user?
+            m_VehicleStatus = eStatus.InRepair;
             r_OwnerName = i_OwnerName;
             r_OwnerPhoneNumber = i_OwnerPhoneNumber;
         }

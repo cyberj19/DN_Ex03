@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using GarageLogic.VehicleParts;
-using System;
-using GarageLogic.VehicleTypes;
 
 namespace GarageLogic
 {
