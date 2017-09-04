@@ -1,12 +1,10 @@
 ﻿using GarageLogic.VehicleParts;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GarageLogic
 {
+    // Represents a single Vehicle recipe, that can be created in VehicleFactory
     class VehicleFactoryRecipe
     {
         private readonly PowerSource r_PowerSource;
@@ -43,6 +41,5 @@ namespace GarageLogic
             r_SampleTires = i_SampleTires;
             r_VehicleType = i_VehicleType;
         }
-
     }
 }

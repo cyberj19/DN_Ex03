@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using GarageLogic;
 using GarageLogic.VehicleParts;
 using GarageLogic.VehicleParts.PowerSources;
 using ConsoleUI.Utils;
-using GarageLogic.VehicleTypes;
 using System.Reflection;
 
 namespace ConsoleUI
@@ -128,7 +124,7 @@ namespace ConsoleUI
             return hasOperationSucceeded;
         }
 
-        const uint k_NumDigitsInPhoneNumber = 10;
+        const uint k_NumDigitsInPhoneNumber = 10; //todo; Choose min and max and also perhaps remove it entirely
         private void handleInsertNewVehicle()
         {
             uint plateNumber = BasicConsoleOperations.GetPositiveNumberFromUser("Please insert vehicle's plate number:", sr_plateNumberRange);
@@ -154,21 +150,24 @@ namespace ConsoleUI
         //todo: reconsider writing better strings than those of the enum
         private Vehicle createVehicleFromUserInput(VehicleRegistrationInfo i_RegistrationInfo)
         {
-
-            VehicleFactory.eSupportedVehicle selectedVehicle = BasicConsoleOperations.GetEnumChoice<VehicleFactory.eSupportedVehicle>("Please choose vehicle type:");
-            TiresInfo tiresInfo = getUserAllTiresInfo(m_Factory.GetNumTiresInRecipe(selectedVehicle), m_Factory.GetTireMaxPsiInRecipe(selectedVehicle));
+            VehicleFactory.eSupportedVehicle selectedVehicle = 
+                BasicConsoleOperations.GetEnumChoice<VehicleFactory.eSupportedVehicle>("Please choose vehicle type:");
+            TiresInfo tiresInfo = getUserInputAllTiresInfo(
+                m_Factory.GetNumTiresInRecipe(selectedVehicle), 
+                m_Factory.GetTireMaxPsiInRecipe(selectedVehicle));
             float initialPowerSourceValue = BasicConsoleOperations.GetPositiveFloatFromUserWithMaxVal(
-                "Please insert initial power source value ", m_Factory.GetPowerCapacityOfPowerSourceInRecipe(selectedVehicle)
-                );
+                                                "Please insert initial power source value ", 
+                                                m_Factory.GetPowerCapacityOfPowerSourceInRecipe(selectedVehicle)
+                                            );
             Vehicle unpopulatedVehicle = m_Factory.CreateUnpopulatedVehicle(selectedVehicle, i_RegistrationInfo, initialPowerSourceValue, tiresInfo);
             populateVehicle(unpopulatedVehicle);
 
             return unpopulatedVehicle;
         }
 
+        // populate a new vehicle
         private void populateVehicle(Vehicle i_UnpopulatedVehicle)
         {
-
             IList<PropertyInfo> props = new List<PropertyInfo>(i_UnpopulatedVehicle.GetType().GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance));
             foreach (PropertyInfo prop in props)
             {
@@ -177,21 +176,9 @@ namespace ConsoleUI
                     prop.SetValue(i_UnpopulatedVehicle, getUserInputAccordingToType(prop.Name, prop.PropertyType));
                 }
             }
-
-
-            /*
-            VehiclePropertyInfo currProp = i_UnpopulatedVehicle.GetAnUnpopulatedPropertyInfo();
-
-            while (currProp != null)
-            {
-                // there is still a property to populate
-
-                i_UnpopulatedVehicle.populate(currProp.Name, getUserInputAccordingToType(currProp.Name, currProp.Type));
-                currProp = i_UnpopulatedVehicle.GetAnUnpopulatedPropertyInfo();
-            }
-            */
         }
 
+        // Get input from the user according to i_Type
         object getUserInputAccordingToType(string i_Name, Type i_Type)
         {
             object retObj = null;
@@ -213,8 +200,8 @@ namespace ConsoleUI
             return retObj;
         }
 
-
-        private TiresInfo getUserAllTiresInfo(int i_NumTires, float i_MaxPSI)
+        // Get TiresInfo from the user
+        private TiresInfo getUserInputAllTiresInfo(int i_NumTires, float i_MaxPSI)
         {
             string[] tiresManufacturerNames = new string[i_NumTires];
             float[] tiresInitialAirValues = new float[i_NumTires];
@@ -244,12 +231,13 @@ namespace ConsoleUI
             return new TiresInfo(tiresManufacturerNames, tiresInitialAirValues);
         }
 
+        // Print status of a specific vehicle, by its record
         private void printRecordStatus(string i_Msg, VehicleRecord i_VehicleRecord)
         {
             BasicConsoleOperations.WriteString(string.Format("{0} {1}", i_Msg, i_VehicleRecord.Status.ToString()));
         }
 
-        //todo: Make sure all detatil in design show up
+        // Show vehicle information
         private void handleShowVehicleInformation(VehicleRecord i_VehicleRecord)
         {
             string ownerStr = string.Format("Vehicle's Owner: {0}{2}Vehicle's Owner Phone number: {1}", i_VehicleRecord.OwnerName, i_VehicleRecord.OwnerPhoneNumber, Environment.NewLine);
@@ -259,6 +247,7 @@ namespace ConsoleUI
             VehiclePrintUtils.PrintVehicle(i_VehicleRecord.Vehicle);
         }
 
+        // Handle mofidy vehicle state menu request
         private void handleModifyVehicleState(VehicleRecord i_VehicleRecord)
         {
             VehicleRecord.eStatus newStatus;
@@ -269,6 +258,7 @@ namespace ConsoleUI
             i_VehicleRecord.Status = newStatus;
         }
 
+        // Handle fill tire air menu request
         private void handleFillTireAir(VehicleRecord i_VehicleRecord)
         {
             foreach (GarageLogic.VehicleParts.Tire tire in i_VehicleRecord.Vehicle.Tires)
@@ -277,6 +267,7 @@ namespace ConsoleUI
             }
         }
 
+        // Handle charge car menu request
         private void handleChargeCar(VehicleRecord i_VehicleRecord)
         {
             PowerSource powerSource = i_VehicleRecord.Vehicle.PowerSource;
@@ -301,6 +292,7 @@ namespace ConsoleUI
             }
         }
 
+        // Handle refuel car menu request
         private void handleRefuelCar(VehicleRecord i_VehicleRecord)
         {
             PowerSource powerSource = i_VehicleRecord.Vehicle.PowerSource;
@@ -327,7 +319,7 @@ namespace ConsoleUI
             }
         }
 
-
+        // Get amount of filter to be used
         private List<VehicleRecord.eStatus> getVehicleStatusFilterInformation()
         {
             List<VehicleRecord.eStatus> filterList = new List<VehicleRecord.eStatus>();
@@ -339,7 +331,8 @@ namespace ConsoleUI
 
             return filterList;
         }
-        //todo: user input for initial values
+
+        // Show all vehicle plates
         private bool handleShowAllVehicles()
         {
             List<VehicleRecord.eStatus> nonAllowedVehicleFilter = getVehicleStatusFilterInformation();
@@ -352,7 +345,5 @@ namespace ConsoleUI
 
             return true;
         }
-
-
     }
 }

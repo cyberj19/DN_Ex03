@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using GarageLogic.VehicleParts;
-using System;
-
-namespace GarageLogic.VehicleTypes
+﻿namespace GarageLogic.VehicleTypes
 {
     public class Car : Vehicle
     {
@@ -24,7 +20,6 @@ namespace GarageLogic.VehicleTypes
 
         private eColor m_Color;
         private eDoorsAmount m_DoorsAmount;
-
 
         public eColor Color
         {

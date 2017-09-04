@@ -40,7 +40,6 @@
     <Compile Include="LimitedRangeValue.cs" />
     <Compile Include="Exceptions\ValueOutOfRangeException.cs" />
     <Compile Include="GarageManager.cs" />
-    <Compile Include="PowerSourceInputParam.cs" />
     <Compile Include="Range.cs" />
     <Compile Include="RangeValue.cs" />
     <Compile Include="TiresFactory.cs" />

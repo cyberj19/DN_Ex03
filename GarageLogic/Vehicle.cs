@@ -8,7 +8,7 @@ namespace GarageLogic
     public abstract class Vehicle
     {
         private VehicleRegistrationInfo m_Info;
-        private List<Tire> m_Tires; //todo: changed to read only make sure can still change inner itemss
+        private List<Tire> m_Tires;
         private PowerSource m_PowerSource;
 
         public List<Tire> Tires

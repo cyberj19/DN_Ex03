@@ -4,7 +4,6 @@ using GarageLogic.VehicleTypes;
 using System;
 using System.Collections.Generic;
 
-//todo: refactor..
 namespace GarageLogic
 {
     public class VehicleFactory
@@ -51,14 +50,6 @@ namespace GarageLogic
             r_VehicleModels.Add(eSupportedVehicle.RegularCar, createFuelCarRecipe());
             r_VehicleModels.Add(eSupportedVehicle.RegularMotorcycle, createFuelMotorcycleRecipe());
             r_VehicleModels.Add(eSupportedVehicle.Truck, createTruckRecipe());
-        }
-
-        private static void thorwArgumentExceptionIfNull(object i_obj)
-        {
-            if (i_obj == null)
-            {
-                throw new ArgumentException();
-            }
         }
 
         private Vehicle createAccordingToRecipe(VehicleFactoryRecipe i_VehicleRecipe)
@@ -120,7 +111,7 @@ namespace GarageLogic
             return i_Recipe.PowerSource.duplicate(i_InitialPowerSourceValue);
         }
 
-        // Create electric car pattern
+        // Create electric car Recipe
         private static VehicleFactoryRecipe createElectricCarRecipe()
         {
             return new VehicleFactoryRecipe(
@@ -130,7 +121,7 @@ namespace GarageLogic
                         );
         }
 
-        // Create fuel car pattern
+        // Create fuel car Recipe
         private static VehicleFactoryRecipe createFuelCarRecipe()
         {
             return new VehicleFactoryRecipe(
@@ -140,7 +131,7 @@ namespace GarageLogic
                         );
         }
 
-        // Create truck pattern
+        // Create truck Recipe
         private static VehicleFactoryRecipe createTruckRecipe()
         {
             return new VehicleFactoryRecipe(
@@ -150,7 +141,7 @@ namespace GarageLogic
                         );
         }
 
-        // Create electric motorcycle pattern
+        // Create electric motorcycle Recipe
         private static VehicleFactoryRecipe createElectricMotorcycleRecipe()
         {
             return new VehicleFactoryRecipe(
@@ -160,7 +151,7 @@ namespace GarageLogic
                         );
         }
 
-        // Create fuel motorcycle pattern
+        // Create fuel motorcycle Recipe
         private static VehicleFactoryRecipe createFuelMotorcycleRecipe()
         {
             return new VehicleFactoryRecipe(

@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using GarageLogic;
 using GarageLogic.VehicleParts;
 using GarageLogic.VehicleParts.PowerSources;
-using GarageLogic.VehicleTypes;
 using System.Reflection;
 
 namespace ConsoleUI.Utils
 {
     class VehiclePrintUtils
     {
+        // Print a vehicle instance
         public static void PrintVehicle(Vehicle i_Vehicle)
         {
             BasicConsoleOperations.WriteString(string.Empty);
@@ -21,45 +20,24 @@ namespace ConsoleUI.Utils
             printPowerSource(i_Vehicle);
         }
 
+        // print specific vehicle-type information
         private static void printSpecificVehicleInfo(Vehicle i_Vehicle)
         {
             StringBuilder outputBuilder = new StringBuilder();
-            Car car = i_Vehicle as Car;
-            Truck truck = i_Vehicle as Truck;
-            Motorcycle motorcycle = i_Vehicle as Motorcycle;
-
             IList<PropertyInfo> props = new List<PropertyInfo>(i_Vehicle.GetType().GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance));
+
+            outputBuilder.AppendFormat("Vehicle Type: {0}{1}", i_Vehicle.GetType().Name, Environment.NewLine);
 
             foreach (PropertyInfo prop in props)
             {
                 object propValue = prop.GetValue(i_Vehicle, null);
-                
-                BasicConsoleOperations.WriteString(string.Format("{0}: {1}", prop.Name, propValue.ToString()));
-
-                // Do something with propValue
+                outputBuilder.AppendFormat("{0}: {1} {2}", prop.Name, propValue.ToString(), Environment.NewLine);
             }
-
-            /*
-            if (car != null)
-            {
-                outputBuilder.AppendLine("Vehicle Type: Car");
-                outputBuilder.AppendFormat("Color: {1} {0}Doors Amount: {2} {0}", Environment.NewLine, car.Color.ToString(), car.DoorsAmount.ToString());
-            }
-            else if (truck != null)
-            {
-                outputBuilder.AppendLine("Vehicle Type: Truck");
-                outputBuilder.AppendFormat("Is carrying dangerous materials: {1} {0}Max allowed carrying weight in Kg: {2} {0}", Environment.NewLine, truck.IsCarryingDangerousMaterials.ToString(), truck.MaxCarryingWeightAllowedKg.ToString());
-
-            }
-            else if (motorcycle != null)
-            {
-                outputBuilder.AppendLine("Vehicle Type: Motorcycle");
-                outputBuilder.AppendFormat("License type: {1} {0}Engine Volume CC: {2} {0}", Environment.NewLine, motorcycle.LicenseType.ToString(), motorcycle.EngineVolumeCC.ToString());
-            }*/
 
             BasicConsoleOperations.WriteString(outputBuilder.ToString());
         }
 
+        // print power source information
         private static void printPowerSource(Vehicle i_Vehicle)
         {
             PowerSource power = i_Vehicle.PowerSource;
@@ -89,7 +67,6 @@ namespace ConsoleUI.Utils
             BasicConsoleOperations.WriteString(sourceStrBuilder.ToString());
         }
 
-
         //todo: units?
         private static void printElectricalPowerSource(ElectricalSource i_Source)
         {
@@ -103,6 +80,7 @@ namespace ConsoleUI.Utils
             BasicConsoleOperations.WriteString(sourceStrBuilder.ToString());
         }
 
+        // Print tires information
         private static void printTiresInfo(Vehicle i_Vehicle)
         {
             StringBuilder tiresInfoBuilder = new StringBuilder();
@@ -122,6 +100,7 @@ namespace ConsoleUI.Utils
             BasicConsoleOperations.WriteString(tiresInfoBuilder.ToString());
         }
 
+        // Print general vehicle information
         private static void printGeneralVehicleInfo(Vehicle i_Vehicle)
         {
             string generalInfoStr = string.Format("Model Name: {0}", i_Vehicle.ModelName);
