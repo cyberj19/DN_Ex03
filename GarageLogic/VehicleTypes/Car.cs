@@ -22,19 +22,20 @@ namespace GarageLogic.VehicleTypes
             Five
         }
 
-        private const string k_ColorPropertyName = "Color";
-        private const string k_DoorsAmountPropertyName = "Doors Amount";
-        private static readonly Dictionary<string, Type> sr_RequiredProperties = new Dictionary<string, Type>()
-        {
-            { k_ColorPropertyName, typeof(eColor) },
-            { k_DoorsAmountPropertyName, typeof(eDoorsAmount) }
-        };
+        private eColor m_Color;
+        private eDoorsAmount m_DoorsAmount;
+
 
         public eColor Color
         {
             get
             {
-                return GetProp<eColor>(k_ColorPropertyName);
+                return m_Color;
+            }
+
+            set
+            {
+                m_Color = value;
             }
         }
 
@@ -42,18 +43,13 @@ namespace GarageLogic.VehicleTypes
         {
             get
             {
-                return GetProp<eDoorsAmount>(k_DoorsAmountPropertyName);
+                return m_DoorsAmount;
             }
-        }
-        
-        public Car() : base(sr_RequiredProperties)
-        {
-        }
 
-        protected override object processPopluateRequest(string i_PropertyName, object i_Obj)
-        {
-            // no special processing is needed by this class, and no range check.
-            return i_Obj;
+            set
+            {
+                m_DoorsAmount = value;
+            }
         }
     }
 }

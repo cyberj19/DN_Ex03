@@ -8,6 +8,7 @@ using GarageLogic.VehicleParts;
 using GarageLogic.VehicleParts.PowerSources;
 using ConsoleUI.Utils;
 using GarageLogic.VehicleTypes;
+using System.Reflection;
 
 namespace ConsoleUI
 {
@@ -167,6 +168,18 @@ namespace ConsoleUI
 
         private void populateVehicle(Vehicle i_UnpopulatedVehicle)
         {
+
+            IList<PropertyInfo> props = new List<PropertyInfo>(i_UnpopulatedVehicle.GetType().GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance));
+            foreach (PropertyInfo prop in props)
+            {
+                if (prop.CanWrite)
+                {
+                    prop.SetValue(i_UnpopulatedVehicle, getUserInputAccordingToType(prop.Name, prop.PropertyType));
+                }
+            }
+
+
+            /*
             VehiclePropertyInfo currProp = i_UnpopulatedVehicle.GetAnUnpopulatedPropertyInfo();
 
             while (currProp != null)
@@ -176,6 +189,7 @@ namespace ConsoleUI
                 i_UnpopulatedVehicle.populate(currProp.Name, getUserInputAccordingToType(currProp.Name, currProp.Type));
                 currProp = i_UnpopulatedVehicle.GetAnUnpopulatedPropertyInfo();
             }
+            */
         }
 
         object getUserInputAccordingToType(string i_Name, Type i_Type)
@@ -186,6 +200,10 @@ namespace ConsoleUI
             if (i_Type.IsEnum)
             {
                 retObj = BasicConsoleOperations.GetEnumChoice(requestStr, i_Type);
+            }
+            else if (i_Type == typeof(bool))
+            {
+                retObj = BasicConsoleOperations.PromptQuestion(requestStr);
             }
             else
             {

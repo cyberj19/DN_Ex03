@@ -6,6 +6,7 @@ using GarageLogic;
 using GarageLogic.VehicleParts;
 using GarageLogic.VehicleParts.PowerSources;
 using GarageLogic.VehicleTypes;
+using System.Reflection;
 
 namespace ConsoleUI.Utils
 {
@@ -27,6 +28,18 @@ namespace ConsoleUI.Utils
             Truck truck = i_Vehicle as Truck;
             Motorcycle motorcycle = i_Vehicle as Motorcycle;
 
+            IList<PropertyInfo> props = new List<PropertyInfo>(i_Vehicle.GetType().GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance));
+
+            foreach (PropertyInfo prop in props)
+            {
+                object propValue = prop.GetValue(i_Vehicle, null);
+                
+                BasicConsoleOperations.WriteString(string.Format("{0}: {1}", prop.Name, propValue.ToString()));
+
+                // Do something with propValue
+            }
+
+            /*
             if (car != null)
             {
                 outputBuilder.AppendLine("Vehicle Type: Car");
@@ -42,7 +55,7 @@ namespace ConsoleUI.Utils
             {
                 outputBuilder.AppendLine("Vehicle Type: Motorcycle");
                 outputBuilder.AppendFormat("License type: {1} {0}Engine Volume CC: {2} {0}", Environment.NewLine, motorcycle.LicenseType.ToString(), motorcycle.EngineVolumeCC.ToString());
-            }
+            }*/
 
             BasicConsoleOperations.WriteString(outputBuilder.ToString());
         }

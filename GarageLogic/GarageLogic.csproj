@@ -57,8 +57,6 @@
     <Compile Include="Vehicle.cs" />
     <Compile Include="VehicleParts\Tire.cs" />
     <Compile Include="VehicleRecord.cs" />
-    <Compile Include="VehicleTypes\VehicleProperty.cs" />
-    <Compile Include="VehicleTypes\VehiclePropertyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
