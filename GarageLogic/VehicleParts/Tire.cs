@@ -3,7 +3,7 @@
     public class Tire
     {
         private readonly string r_ManufacturerName;
-        LimitedRangeValue m_AirPressure;
+        LimitedFloatValue m_AirPressure;
 
         public string ManufacturerName
         {
@@ -17,7 +17,7 @@
         {
             get
             {
-                return m_AirPressure.MaxAmount;
+                return m_AirPressure.Max;
             }
         }
 
@@ -25,20 +25,20 @@
         {
             get
             {
-                return m_AirPressure.CurrentAmount;
+                return m_AirPressure.Value;
             }
         }
 
         // Fill up the tire
         public void InflateAir(float i_AdditionPSI)
         {
-            m_AirPressure.CurrentAmount += i_AdditionPSI;
+            m_AirPressure.Value += i_AdditionPSI;
         }
 
         public Tire(float i_MaxPSI, string i_ManufacturerName)
         {
             r_ManufacturerName = i_ManufacturerName;
-            m_AirPressure = new LimitedRangeValue(i_MaxPSI);
+            m_AirPressure = new LimitedFloatValue(i_MaxPSI);
         }
     }
 }

@@ -13,13 +13,13 @@ namespace GarageLogic.VehicleParts.PowerSources
         }
 
         private readonly eFuelType r_FuelType;
-        private LimitedRangeValue m_FuelLevel;
+        private LimitedFloatValue m_FuelLevel;
 
         public override float CurrentPowerLevel
         {
             get
             {
-                return m_FuelLevel.CurrentAmount;
+                return m_FuelLevel.Value;
             }
         }
 
@@ -27,7 +27,7 @@ namespace GarageLogic.VehicleParts.PowerSources
         {
             get
             {
-                return m_FuelLevel.MaxAmount;
+                return m_FuelLevel.Max;
             }
         }
 
@@ -42,14 +42,14 @@ namespace GarageLogic.VehicleParts.PowerSources
         public FuelSource(eFuelType i_FuelType, float i_MaxCapacityInLiters)
         {
             r_FuelType = i_FuelType;
-            m_FuelLevel = new LimitedRangeValue(i_MaxCapacityInLiters);
+            m_FuelLevel = new LimitedFloatValue(i_MaxCapacityInLiters);
         }
 
         // Fuel power source
         public void Refuel(eFuelType i_FuelType, float i_FuelLitersToAdd)
         {
             validateFuelType(i_FuelType);
-            m_FuelLevel.CurrentAmount += i_FuelLitersToAdd;
+            m_FuelLevel.Value += i_FuelLitersToAdd;
         }
 
         // validate using correct fuel
@@ -63,7 +63,7 @@ namespace GarageLogic.VehicleParts.PowerSources
 
         public override PowerSource duplicate(float i_InitialCapacity)
         {
-            FuelSource newSource = new FuelSource(r_FuelType, m_FuelLevel.MaxAmount);
+            FuelSource newSource = new FuelSource(r_FuelType, m_FuelLevel.Max);
 
             newSource.Refuel(r_FuelType, i_InitialCapacity);
 
