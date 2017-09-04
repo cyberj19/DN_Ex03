@@ -1,4 +1,6 @@
-﻿namespace GarageLogic.VehicleParts.PowerSources
+﻿using System;
+
+namespace GarageLogic.VehicleParts.PowerSources
 {
     public class ElectricalSource : PowerSource
     {
@@ -29,6 +31,15 @@
         public void Recharge(float m_ChargeHoursToAdd)
         {
             m_BattaryLevel.CurrentAmount += m_ChargeHoursToAdd;
+        }
+
+        public override PowerSource duplicate(float i_InitialCapacity)
+        {
+            ElectricalSource newSource = new ElectricalSource(m_BattaryLevel.MaxAmount);
+
+            newSource.Recharge(i_InitialCapacity);
+
+            return newSource;
         }
     }
 }

@@ -1,18 +1,26 @@
 ﻿using System.Collections.Generic;
 using GarageLogic.VehicleParts;
+using System;
 
 namespace GarageLogic.VehicleTypes
 {
     public class Truck : Vehicle
     {
         //todo: Access this, and give releveant inormation to VehiclePrintUtils to all these 3 classes
-        private readonly TruckInfo r_TruckInfo;
-        
+        private const string k_IsCarryingDangerousMaterialsPropertyName = "Is Carrying Dangerous Materials";
+        private const string k_MaxCarryWeightAllowedKgPropertyName = "Max Carry Weight Allowed In Kg";
+        private static readonly Dictionary<string, Type> sr_RequiredProperties = new Dictionary<string, Type>()
+        {
+            { k_IsCarryingDangerousMaterialsPropertyName, typeof(bool) },
+            { k_MaxCarryWeightAllowedKgPropertyName, typeof(float) }
+        };
+
+
         public bool IsCarryingDangerousMaterials
         {
             get
             {
-                return r_TruckInfo.IsCarryingDangerousMaterials;
+                return GetProp<bool>(k_IsCarryingDangerousMaterialsPropertyName);
             }
         }
 
@@ -20,20 +28,18 @@ namespace GarageLogic.VehicleTypes
         {
             get
             {
-                return r_TruckInfo.MaxCarryingWeightAllowedKg;
+                return GetProp<float>(k_MaxCarryWeightAllowedKgPropertyName);
             }
         }
 
-        public Truck(PowerSource i_PowerSource, VehicleRegistrationInfo i_VehicleInfo, List<Tire> i_Tires,
-            TruckInfo i_TruckInfo) 
-            :base(i_PowerSource, i_VehicleInfo, i_Tires)
+        public Truck() : base(sr_RequiredProperties)
         {
-            r_TruckInfo = i_TruckInfo;
         }
 
-        public Truck(PowerSource i_PowerSource, List<Tire> i_Tires) : base(i_PowerSource, VehicleRegistrationInfo.Default, i_Tires)
+        protected override object processPopluateRequest(string i_PropertyName, object i_Obj)
         {
-            r_TruckInfo = TruckInfo.Default;       
+            // no special processing is needed by this class, and no range check.
+            return i_Obj;
         }
     }
 }

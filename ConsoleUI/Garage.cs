@@ -153,61 +153,63 @@ namespace ConsoleUI
         //todo: reconsider writing better strings than those of the enum
         private Vehicle createVehicleFromUserInput(VehicleRegistrationInfo i_RegistrationInfo)
         {
-            VehicleFactory.eSupportedVehicle selectedVehicle = BasicConsoleOperations.GetEnumChoice<VehicleFactory.eSupportedVehicle>("Please choose vehicle type:");
-            Vehicle model = m_Factory.GetModel(selectedVehicle);
-            object vehicleSpecificInfo = getUserSpecificInfo(model);
-            TiresInfo tiresInfo = getUserAllTiresInfo(model);
-            float initialPowerSourceValue = BasicConsoleOperations.GetPositiveFloatFromUserWithMaxVal(
-                "Please insert initial power source value ", model.PowerSource.PowerCapacity
-                );
 
-            return m_Factory.Create(selectedVehicle, i_RegistrationInfo, vehicleSpecificInfo, initialPowerSourceValue, tiresInfo);
+            VehicleFactory.eSupportedVehicle selectedVehicle = BasicConsoleOperations.GetEnumChoice<VehicleFactory.eSupportedVehicle>("Please choose vehicle type:");
+            TiresInfo tiresInfo = getUserAllTiresInfo(m_Factory.GetNumTiresInRecipe(selectedVehicle), m_Factory.GetTireMaxPsiInRecipe(selectedVehicle));
+            float initialPowerSourceValue = BasicConsoleOperations.GetPositiveFloatFromUserWithMaxVal(
+                "Please insert initial power source value ", m_Factory.GetPowerCapacityOfPowerSourceInRecipe(selectedVehicle)
+                );
+            Vehicle unpopulatedVehicle = m_Factory.CreateUnpopulatedVehicle(selectedVehicle, i_RegistrationInfo, initialPowerSourceValue, tiresInfo);
+            populateVehicle(unpopulatedVehicle);
+
+            return unpopulatedVehicle;
         }
 
-        private object getUserSpecificInfo(Vehicle model)
+        private void populateVehicle(Vehicle i_UnpopulatedVehicle)
+        {
+            VehiclePropertyInfo currProp = i_UnpopulatedVehicle.GetAnUnpopulatedPropertyInfo();
+
+            while (currProp != null)
+            {
+                // there is still a property to populate
+
+                i_UnpopulatedVehicle.populate(currProp.Name, getUserInputAccordingToType(currProp.Name, currProp.Type));
+                currProp = i_UnpopulatedVehicle.GetAnUnpopulatedPropertyInfo();
+            }
+        }
+
+        object getUserInputAccordingToType(string i_Name, Type i_Type)
         {
             object retObj = null;
+            string requestStr = string.Format("Please insert information for {0} ({1})", i_Name, i_Type.Name);
 
-            if (model is Car)
+            if (i_Type.IsEnum)
             {
-                Car.eColor carColor = BasicConsoleOperations.GetEnumChoice<Car.eColor>("Please choose car color:");
-                Car.eDoorsAmount doorAmount = BasicConsoleOperations.GetEnumChoice<Car.eDoorsAmount>("Please choose car door amounts:");
-
-                retObj = new CarInfo(carColor, doorAmount);
+                retObj = BasicConsoleOperations.GetEnumChoice(requestStr, i_Type);
             }
-            else if (model is Motorcycle)
+            else
             {
-                Motorcycle.eLicenseType licenseType = BasicConsoleOperations.GetEnumChoice<Motorcycle.eLicenseType>("Please choose license type:");
-                int engineVolumeCC = (int)BasicConsoleOperations.GetPositiveNumberFromUser("Please insert engine volume cc:", new PositiveRange(0, 10000)); //todo: const..
-
-                retObj = new MotorcycleInfo(licenseType, engineVolumeCC);
-            }
-            else if (model is Truck)
-            {
-                bool isCarryingDangerousMaterials = BasicConsoleOperations.PromptQuestion("Is carrying dangerous materials?");
-                float maxCarryWeightAllowedKg = BasicConsoleOperations.GetPositiveFloatFromUserWithMaxVal("Please insert max allowed carrying weight in kg:", 100000); //todo: const..
-
-                retObj = new TruckInfo(isCarryingDangerousMaterials, maxCarryWeightAllowedKg);
+                retObj = Convert.ChangeType(BasicConsoleOperations.GetString(requestStr), i_Type);
             }
 
             return retObj;
         }
 
-        private TiresInfo getUserAllTiresInfo(Vehicle model)
+
+        private TiresInfo getUserAllTiresInfo(int i_NumTires, float i_MaxPSI)
         {
-            int numTires = model.Tires.Count;
-            string[] tiresManufacturerNames = new string[numTires];
-            float[] tiresInitialAirValues = new float[numTires];
+            string[] tiresManufacturerNames = new string[i_NumTires];
+            float[] tiresInitialAirValues = new float[i_NumTires];
             bool areAllTiresSameType = false;
   
-            for (int i = 0; i < numTires; i++)
+            for (int i = 0; i < i_NumTires; i++)
             {
                 if (!areAllTiresSameType)
                 {
                     BasicConsoleOperations.WriteString("_______");
                     BasicConsoleOperations.WriteString(string.Format("Entering data for tire number: {0}", i + 1));
                     tiresManufacturerNames[i] = BasicConsoleOperations.GetString("Please insert manufacturer name:");
-                    tiresInitialAirValues[i] = BasicConsoleOperations.GetPositiveFloatFromUserWithMaxVal("Please insert initial air value", model.Tires[0].MaxPSI);
+                    tiresInitialAirValues[i] = BasicConsoleOperations.GetPositiveFloatFromUserWithMaxVal("Please insert initial air value", i_MaxPSI);
 
                     if (i == k_FirstLoopRun)
                     {

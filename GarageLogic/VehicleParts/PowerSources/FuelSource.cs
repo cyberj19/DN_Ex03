@@ -60,5 +60,14 @@ namespace GarageLogic.VehicleParts.PowerSources
                 throw new ArgumentException();
             }
         }
+
+        public override PowerSource duplicate(float i_InitialCapacity)
+        {
+            FuelSource newSource = new FuelSource(r_FuelType, m_FuelLevel.MaxAmount);
+
+            newSource.Refuel(r_FuelType, i_InitialCapacity);
+
+            return newSource;
+        }
     }
 }

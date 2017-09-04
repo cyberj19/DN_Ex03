@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using GarageLogic.VehicleParts;
+using System;
 
 namespace GarageLogic.VehicleTypes
 {
@@ -20,19 +21,20 @@ namespace GarageLogic.VehicleTypes
             Four,
             Five
         }
-        //todo: need to access these..
 
-        //todo: Truck.cs review same rules here
-        //        protected readonly eColor r_Color = eColor.White; //default value
-        //        protected readonly eDoorsAmount r_DoorsAmount = eDoorsAmount.Four;
+        private const string k_ColorPropertyName = "Color";
+        private const string k_DoorsAmountPropertyName = "Doors Amount";
+        private static readonly Dictionary<string, Type> sr_RequiredProperties = new Dictionary<string, Type>()
+        {
+            { k_ColorPropertyName, typeof(eColor) },
+            { k_DoorsAmountPropertyName, typeof(eDoorsAmount) }
+        };
 
-        private readonly CarInfo r_CarInfo;
-       
         public eColor Color
         {
             get
             {
-                return r_CarInfo.Color;
+                return GetProp<eColor>(k_ColorPropertyName);
             }
         }
 
@@ -40,23 +42,18 @@ namespace GarageLogic.VehicleTypes
         {
             get
             {
-                return r_CarInfo.DoorsAmount;
+                return GetProp<eDoorsAmount>(k_DoorsAmountPropertyName);
             }
         }
-
-        //todo: Why number of doors is in an enum? Tommorow i would want a car with 7 doors. Why isnt this possible?
         
-        public Car(PowerSource i_PowerSource, VehicleRegistrationInfo i_VehicleInfo, List<Tire> i_Tires, CarInfo i_CarInfo) 
-            : base(i_PowerSource, i_VehicleInfo, i_Tires)
+        public Car() : base(sr_RequiredProperties)
         {
-            r_CarInfo = i_CarInfo;
         }
 
-        public Car(PowerSource i_PowerSource, List<Tire> i_Tires)
-            : base(i_PowerSource, VehicleRegistrationInfo.Default, i_Tires)
+        protected override object processPopluateRequest(string i_PropertyName, object i_Obj)
         {
-            r_CarInfo = CarInfo.Default;
+            // no special processing is needed by this class, and no range check.
+            return i_Obj;
         }
-
     }
 }

@@ -10,7 +10,7 @@ namespace GarageLogic
     public class VehicleFactory
     {
         public enum eSupportedVehicle 
-        {//todo: make sure this is defaulted to 0. check all enums to 0.
+        {
             ElectricCar,
             ElectricMotorcycle,
             RegularCar,
@@ -35,27 +35,22 @@ namespace GarageLogic
         private const int k_MotorcycleAmountOfTires = 2;
         private const float k_MotorcycleTireMaxAmountOfPressure = 28.0f;
         private const float k_MotorcycleMaxBattaryCapacityInHours = 1.6f; //todo: Go over all create functions make sure didnt typo care instead of motorcycle etc'
-        private readonly Dictionary<eSupportedVehicle, Vehicle> m_VehicleModels;
-
-        public Vehicle GetModel(eSupportedVehicle i_VehicleModel)
-        {
-            return m_VehicleModels[i_VehicleModel];
-        }
+        private readonly Dictionary<eSupportedVehicle, VehicleFactoryRecipe> r_VehicleModels;
 
         public VehicleFactory()
         {
-            m_VehicleModels = new Dictionary<eSupportedVehicle, Vehicle>();
+            r_VehicleModels = new Dictionary<eSupportedVehicle, VehicleFactoryRecipe>();
             initDictionary();
         }
 
         // init allowed vehicles to be created.
         private void initDictionary()
         {
-            m_VehicleModels.Add(eSupportedVehicle.ElectricCar, createElectricCarPattern());
-            m_VehicleModels.Add(eSupportedVehicle.ElectricMotorcycle, createElectricMotorcyclePattern());
-            m_VehicleModels.Add(eSupportedVehicle.RegularCar, createFuelCarPattern());
-            m_VehicleModels.Add(eSupportedVehicle.RegularMotorcycle, createFuelMotorcyclePattern());
-            m_VehicleModels.Add(eSupportedVehicle.Truck, createTruckPattern());
+            r_VehicleModels.Add(eSupportedVehicle.ElectricCar, createElectricCarRecipe());
+            r_VehicleModels.Add(eSupportedVehicle.ElectricMotorcycle, createElectricMotorcycleRecipe());
+            r_VehicleModels.Add(eSupportedVehicle.RegularCar, createFuelCarRecipe());
+            r_VehicleModels.Add(eSupportedVehicle.RegularMotorcycle, createFuelMotorcycleRecipe());
+            r_VehicleModels.Add(eSupportedVehicle.Truck, createTruckRecipe());
         }
 
         private static void thorwArgumentExceptionIfNull(object i_obj)
@@ -66,39 +61,40 @@ namespace GarageLogic
             }
         }
 
-        //todo: better name than model
-        public Vehicle Create(eSupportedVehicle i_VehicleModel, VehicleRegistrationInfo i_VehicleInfo,
-                                object i_SpecificInfo,
-                                float i_InitialPowerSourceValue,
-                                TiresInfo i_TiresInfo)
+        private Vehicle createAccordingToRecipe(VehicleFactoryRecipe i_VehicleRecipe)
         {
-            Vehicle model = m_VehicleModels[i_VehicleModel];
-            PowerSource newPowerSource = createPowerSourceFromPattern(model, i_InitialPowerSourceValue);
-            List<Tire> newTires = createTiresFromPattern(model, i_TiresInfo.TiresManufacturerNameArray);
-            Vehicle newVehicle = null;
+            return (Vehicle)Activator.CreateInstance(i_VehicleRecipe.Type);
+        }
 
-            if (model is Car)
-            {
-                CarInfo carInfo = i_SpecificInfo as CarInfo;
+        public float GetPowerCapacityOfPowerSourceInRecipe(eSupportedVehicle i_VehicleModel)
+        {
+            return r_VehicleModels[i_VehicleModel].PowerSource.PowerCapacity;
+        }
 
-                thorwArgumentExceptionIfNull(carInfo);
-                newVehicle = createCarFromPattern(i_VehicleInfo, carInfo, newPowerSource, newTires);
-            }
-            else if (model is Motorcycle)
-            {
-                MotorcycleInfo motorcycleInfo = i_SpecificInfo as MotorcycleInfo;
-                
-                thorwArgumentExceptionIfNull(motorcycleInfo);
-                newVehicle = createMotorcycleFromPattern(i_VehicleInfo, motorcycleInfo, newPowerSource, newTires);
-            }
-            else if (model is Truck)
-            {
-                TruckInfo truckInfo = i_SpecificInfo as TruckInfo;
+        public float GetTireMaxPsiInRecipe(eSupportedVehicle i_VehicleModel)
+        {
+            return r_VehicleModels[i_VehicleModel].Tires[0].MaxPSI; //todo: cannot be without tires.....
+        }
 
-                thorwArgumentExceptionIfNull(truckInfo);
-                newVehicle = createTruckFromPattern(i_VehicleInfo, truckInfo, newPowerSource, newTires);
-            }
+        public int GetNumTiresInRecipe(eSupportedVehicle i_VehicleModel)
+        {
+            return r_VehicleModels[i_VehicleModel].Tires.Count;
+        }
 
+        //todo: Before inserting vehicle to garage can check if all property full..
+
+        //todo: better name than model
+        public Vehicle CreateUnpopulatedVehicle(   eSupportedVehicle i_VehicleModel, 
+                                                    VehicleRegistrationInfo i_VehicleInfo,
+                                                    float i_InitialPowerSourceValue,
+                                                    TiresInfo i_TiresInfo)
+        {
+            VehicleFactoryRecipe recipe = r_VehicleModels[i_VehicleModel];
+            PowerSource newPowerSource = createPowerSourceFromRecipe(recipe, i_InitialPowerSourceValue);
+            List<Tire> newTires = createTiresFromRecipe(recipe, i_TiresInfo.TiresManufacturerNameArray);
+            Vehicle newVehicle = createAccordingToRecipe(recipe);
+
+            newVehicle.InitVehicle(newPowerSource, i_VehicleInfo, newTires);
             inflateTires(newTires, i_TiresInfo);
 
             return newVehicle;
@@ -113,95 +109,64 @@ namespace GarageLogic
                 i_Tires[i].InflateAir(i_TiresInfo.TiresInitialAirValue[i]);
             }
         }
-
-        private Vehicle createTruckFromPattern(VehicleRegistrationInfo i_VehicleInfo, TruckInfo i_TruckInfo, PowerSource i_NewPowerSource, List<Tire> i_NewTires)
-        {
-            return new Truck(i_NewPowerSource, i_VehicleInfo, i_NewTires, i_TruckInfo);
-        }
-
-        private Vehicle createMotorcycleFromPattern(VehicleRegistrationInfo i_VehicleInfo, MotorcycleInfo i_MotorcycleInfo, PowerSource i_NewPowerSource, List<Tire> i_NewTires)
-        {
-            return new Motorcycle(i_NewPowerSource, i_VehicleInfo, i_NewTires, i_MotorcycleInfo);
-        }
-
-        private Vehicle createCarFromPattern(VehicleRegistrationInfo i_VehicleInfo, CarInfo i_CarInfo, PowerSource i_NewPowerSource, List<Tire> i_NewTires)
-        {
-            return new Car(i_NewPowerSource, i_VehicleInfo, i_NewTires, i_CarInfo);
-        }
         
-        private List<Tire> createTiresFromPattern(Vehicle i_ModelPattern, string[] i_TiresManufacturerName)
+        private List<Tire> createTiresFromRecipe(VehicleFactoryRecipe i_Recipe, string[] i_TiresManufacturerName)
         {
-            List<Tire> modelTires = i_ModelPattern.Tires;
-
-            return TiresFactory.ProductTiresAccordingToExisting(i_TiresManufacturerName, modelTires);
+            return TiresFactory.ProductTiresAccordingToExisting(i_TiresManufacturerName, i_Recipe.Tires);
         }
 
-        private PowerSource createPowerSourceFromPattern(Vehicle i_ModelPattern, float i_InitialPowerSourceValue)
+        private PowerSource createPowerSourceFromRecipe(VehicleFactoryRecipe i_Recipe, float i_InitialPowerSourceValue)
         {
-            ElectricalSource electricalSource = i_ModelPattern.PowerSource as ElectricalSource;
-            PowerSource newPowerSource = null;
-
-            if (electricalSource != null)
-            {
-                ElectricalSource newElectricalSource = new ElectricalSource(electricalSource.PowerCapacity);
-
-                newElectricalSource.Recharge(i_InitialPowerSourceValue);
-                newPowerSource = newElectricalSource;
-            }
-            else
-            {
-                FuelSource fuelSource = i_ModelPattern.PowerSource as FuelSource;
-                FuelSource newFuelSource = new FuelSource(fuelSource.FuelType, fuelSource.PowerCapacity);
-
-                newFuelSource.Refuel(newFuelSource.FuelType ,i_InitialPowerSourceValue);
-                newPowerSource = newFuelSource;
-            }
-
-            return newPowerSource;
+            return i_Recipe.PowerSource.duplicate(i_InitialPowerSourceValue);
         }
 
         // Create electric car pattern
-        private static Vehicle createElectricCarPattern()
+        private static VehicleFactoryRecipe createElectricCarRecipe()
         {
-            return new Car(
+            return new VehicleFactoryRecipe(
                             new ElectricalSource(k_CarMaxBattaryCapacityInHours),
-                            TiresFactory.ProduceTires(k_DefaultTiresManufacturerName, k_CarAmountOfTires, k_CarTireMaxAmountOfPressure)
+                            TiresFactory.ProduceTires(k_DefaultTiresManufacturerName, k_CarAmountOfTires, k_CarTireMaxAmountOfPressure),
+                            typeof(Car)
                         );
         }
 
         // Create fuel car pattern
-        private static Vehicle createFuelCarPattern()
+        private static VehicleFactoryRecipe createFuelCarRecipe()
         {
-            return new Car(
+            return new VehicleFactoryRecipe(
                             new FuelSource(k_CarFuelType, k_CarTankCapacity),
-                            TiresFactory.ProduceTires(k_DefaultTiresManufacturerName, k_CarAmountOfTires, k_CarTireMaxAmountOfPressure)
+                            TiresFactory.ProduceTires(k_DefaultTiresManufacturerName, k_CarAmountOfTires, k_CarTireMaxAmountOfPressure),
+                            typeof(Car)
                         );
         }
 
         // Create truck pattern
-        private static Vehicle createTruckPattern()
+        private static VehicleFactoryRecipe createTruckRecipe()
         {
-            return new Truck(
+            return new VehicleFactoryRecipe(
                             new FuelSource(k_TruckFuelType, k_TruckTankCapacity),
-                            TiresFactory.ProduceTires(k_DefaultTiresManufacturerName, k_TruckAmountOfTires, k_TruckTireMaxAmountOfPressure)
+                            TiresFactory.ProduceTires(k_DefaultTiresManufacturerName, k_TruckAmountOfTires, k_TruckTireMaxAmountOfPressure),
+                            typeof(Truck)
                         );
         }
 
         // Create electric motorcycle pattern
-        private static Vehicle createElectricMotorcyclePattern()
+        private static VehicleFactoryRecipe createElectricMotorcycleRecipe()
         {
-            return new Motorcycle(
+            return new VehicleFactoryRecipe(
                             new ElectricalSource(k_MotorcycleMaxBattaryCapacityInHours),
-                            TiresFactory.ProduceTires(k_DefaultTiresManufacturerName, k_MotorcycleAmountOfTires, k_MotorcycleTireMaxAmountOfPressure)
+                            TiresFactory.ProduceTires(k_DefaultTiresManufacturerName, k_MotorcycleAmountOfTires, k_MotorcycleTireMaxAmountOfPressure),
+                            typeof(Motorcycle)
                         );
         }
 
         // Create fuel motorcycle pattern
-        private static Vehicle createFuelMotorcyclePattern()
+        private static VehicleFactoryRecipe createFuelMotorcycleRecipe()
         {
-            return new Motorcycle(
+            return new VehicleFactoryRecipe(
                             new FuelSource(k_MotorcycleFuelType, k_MotorcycleTankCapacity),
-                            TiresFactory.ProduceTires(k_DefaultTiresManufacturerName, k_MotorcycleAmountOfTires, k_MotorcycleTireMaxAmountOfPressure)
+                            TiresFactory.ProduceTires(k_DefaultTiresManufacturerName, k_MotorcycleAmountOfTires, k_MotorcycleTireMaxAmountOfPressure),
+                            typeof(Motorcycle)
                         );
         }
     }

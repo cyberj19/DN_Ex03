@@ -76,10 +76,14 @@ namespace ConsoleUI.Utils
         // Choose an enum value. Shows the user all enum options first
         public static T GetEnumChoice<T>(string i_UserMsg)
         {
-            Type typeOfGeneric = typeof(T);
-            uint enumVal = GetOption(i_UserMsg, createStrArrFromEnum(typeOfGeneric));
+            return (T)GetEnumChoice(i_UserMsg, typeof(T));
+        }
 
-            return (T)Enum.ToObject(typeOfGeneric, enumVal);
+        public static object GetEnumChoice(string i_UserMsg, Type i_EnumType)
+        {
+            uint enumVal = GetOption(i_UserMsg, createStrArrFromEnum(i_EnumType));
+
+            return Enum.ToObject(i_EnumType, enumVal);
         }
 
         //todo: refactor perhaps move some of the logic to positive number from user

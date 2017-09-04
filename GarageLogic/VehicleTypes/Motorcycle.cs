@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using GarageLogic.VehicleParts;
+using System;
 
 namespace GarageLogic.VehicleTypes
 {
@@ -14,14 +15,21 @@ namespace GarageLogic.VehicleTypes
         }
 
         //todo: DID NOT PRINT THIS INFO! go back to VehiclePrintUTils. check for other things aswell
-        private readonly MotorcycleInfo r_Info;
+        //        private readonly Motorcycle.eLicenseType r_LicenseType;
+        //        private readonly int r_EngineVolumeCC;
+        private const string k_LicenseTypePropertyName = "License Type";
+        private const string k_EngineVolumeCCPropertyName = "Engine Volume CC";
+        private static readonly Dictionary<string, Type> sr_RequiredProperties = new Dictionary<string, Type>()
+        {
+            { k_LicenseTypePropertyName, typeof(eLicenseType) },
+            { k_EngineVolumeCCPropertyName, typeof(int) }
+        };
 
-        
         public int EngineVolumeCC
         {
             get
             {
-                return r_Info.EngineVolumeCC;
+                return GetProp<int>(k_EngineVolumeCCPropertyName);
             }
         }
 
@@ -29,21 +37,18 @@ namespace GarageLogic.VehicleTypes
         {
             get
             {
-                return r_Info.LicenseType;
+                return GetProp<eLicenseType>(k_LicenseTypePropertyName);
             }
         }
 
-
-        public Motorcycle(PowerSource i_PowerSource, VehicleRegistrationInfo i_VehicleInfo, List<Tire> i_Tires,
-            MotorcycleInfo i_Info) 
-            : base(i_PowerSource, i_VehicleInfo, i_Tires)
+        public Motorcycle() : base(sr_RequiredProperties)
         {
-            r_Info = i_Info;
         }
 
-        public Motorcycle(PowerSource i_PowerSource, List<Tire> i_Tires) : base(i_PowerSource, VehicleRegistrationInfo.Default, i_Tires)
+        protected override object processPopluateRequest(string i_PropertyName, object i_Obj)
         {
-            r_Info = MotorcycleInfo.Default;
+            // no special processing is needed by this class, and no range check.
+            return i_Obj;
         }
     }
 }

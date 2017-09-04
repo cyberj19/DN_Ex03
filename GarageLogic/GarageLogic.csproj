@@ -41,22 +41,24 @@
     <Compile Include="Exceptions\ValueOutOfRangeException.cs" />
     <Compile Include="GarageManager.cs" />
     <Compile Include="PowerSourceInputParam.cs" />
+    <Compile Include="Range.cs" />
+    <Compile Include="RangeValue.cs" />
     <Compile Include="TiresFactory.cs" />
     <Compile Include="VehicleFactory.cs" />
+    <Compile Include="VehicleFactoryRecipe.cs" />
     <Compile Include="VehicleParts\TiresInfo.cs" />
     <Compile Include="VehicleRegistrationInfo.cs" />
-    <Compile Include="VehicleTypes\CarInfo.cs" />
     <Compile Include="VehicleTypes\Motorcycle.cs" />
     <Compile Include="VehicleTypes\Car.cs" />
     <Compile Include="VehicleParts\PowerSources\ElectricalSource.cs" />
     <Compile Include="VehicleParts\PowerSource.cs" />
     <Compile Include="VehicleParts\PowerSources\FuelSource.cs" />
-    <Compile Include="VehicleTypes\MotorcycleInfo.cs" />
     <Compile Include="VehicleTypes\Truck.cs" />
     <Compile Include="Vehicle.cs" />
     <Compile Include="VehicleParts\Tire.cs" />
     <Compile Include="VehicleRecord.cs" />
-    <Compile Include="VehicleTypes\TruckInfo.cs" />
+    <Compile Include="VehicleTypes\VehicleProperty.cs" />
+    <Compile Include="VehicleTypes\VehiclePropertyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
