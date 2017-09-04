@@ -3,6 +3,7 @@ using GarageLogic.VehicleParts;
 
 namespace GarageLogic
 {
+    // Represents a vehicle
     public abstract class Vehicle
     {
         private VehicleRegistrationInfo m_Info;

@@ -1,6 +1,6 @@
 ﻿namespace GarageLogic.VehicleTypes
 {
-    public class Motorcycle : Vehicle
+    class Motorcycle : Vehicle
     {
         public enum eLicenseType
         {

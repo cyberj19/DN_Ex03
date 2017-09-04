@@ -1,5 +1,6 @@
 ﻿namespace GarageLogic.VehicleParts
 {
+    // Holds info about a group of tires
     public class TiresInfo
     {
         private readonly string[] r_TiresManufacturerName;

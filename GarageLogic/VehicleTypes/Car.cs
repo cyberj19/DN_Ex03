@@ -1,6 +1,6 @@
 ﻿namespace GarageLogic.VehicleTypes
 {
-    public class Car : Vehicle
+    class Car : Vehicle
     {
         public enum eColor
         {

@@ -1,6 +1,6 @@
 ﻿namespace GarageLogic.VehicleTypes
 {
-    public class Truck : Vehicle
+    class Truck : Vehicle
     {
         private bool m_IsCarryingDangerousMaterials;
         private float m_MaxCarryingWeightAllowedInKg;

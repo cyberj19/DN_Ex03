@@ -3,15 +3,18 @@
     // Represents vehicle power source (Engine + Power Capacitor)
     public abstract class PowerSource
     {
+        private const float k_Threshold = 0.999f;
+        private const float k_fullPercent = 1.0f;
+
         public float EnergyPercent
         {
             get
             {
                 float percent = CurrentPowerLevel / PowerCapacity;
 
-                if (percent > 0.999f)
+                if (percent > k_Threshold)
                 {
-                    percent = 1.0f;
+                    percent = k_fullPercent;
                 }
 
                 return percent;

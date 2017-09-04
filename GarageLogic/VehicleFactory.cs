@@ -19,7 +19,6 @@ namespace GarageLogic
 
         // Consts for Allowed Vehicle Patterns
         private const string k_DefaultTiresManufacturerName = ""; // its constant, cannot assign string.empty
-
         private const int k_CarAmountOfTires = 4;
         private const float k_CarTireMaxAmountOfPressure = 32.0f;
         private const float k_CarMaxBattaryCapacityInHours = 2.8f;

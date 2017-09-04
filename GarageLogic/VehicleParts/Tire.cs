@@ -1,5 +1,6 @@
 ﻿namespace GarageLogic.VehicleParts
 {
+    // Represents a tire
     public class Tire
     {
         private readonly string r_ManufacturerName;
