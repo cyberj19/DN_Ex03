@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using GarageLogic.VehicleParts;
-using System;
 
 namespace GarageLogic
 {
@@ -20,7 +20,7 @@ namespace GarageLogic
         }
 
         // Create new tires according to a "recipe" of already-existing tires
-        public static List<Tire> ProductTiresAccordingToExisting(string[] i_NewManufacturerNames, List<Tire> i_ExistingTires)
+        public static List<Tire> ProduceTiresAccordingToExisting(string[] i_NewManufacturerNames, List<Tire> i_ExistingTires)
         {
             List<Tire> newTires = new List<Tire>(i_NewManufacturerNames.Length);
 

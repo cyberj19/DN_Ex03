@@ -17,6 +17,7 @@ namespace GarageLogic
             {
                 setValue(value);
             }
+
             get
             {
                 return m_Value;

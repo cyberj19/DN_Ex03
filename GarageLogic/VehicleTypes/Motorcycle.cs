@@ -32,6 +32,7 @@
             {
                 return m_LicenseType;
             }
+
             set
             {
                 m_LicenseType = value;

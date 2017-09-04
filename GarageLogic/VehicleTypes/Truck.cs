@@ -2,7 +2,6 @@
 {
     public class Truck : Vehicle
     {
-
         private bool m_IsCarryingDangerousMaterials;
         private float m_MaxCarryingWeightAllowedInKg;
 

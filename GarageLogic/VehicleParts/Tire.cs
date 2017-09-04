@@ -1,6 +1,5 @@
 ﻿namespace GarageLogic.VehicleParts
 {
-
     //todo: rethink if this should be struct because on foreach loop it doesnt change (not by ref.........)
     //todo: meanwhile change to class. need to make sure it doesnt ruin any other things. consider also turning to classes other
     //todo: objects. And make sure foreach loop are working ok with all our objects

@@ -24,7 +24,15 @@
         }
 
         public abstract PowerSource duplicate(float i_InitialCapacity);
-        public virtual float CurrentPowerLevel { get; set; }
-        public virtual float PowerCapacity { get; }
+
+        public virtual float CurrentPowerLevel {
+            get;
+            set;
+        }
+
+        public virtual float PowerCapacity
+        {
+            get;
+        }
     }
 }

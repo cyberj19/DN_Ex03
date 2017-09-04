@@ -1,8 +1,8 @@
-﻿using GarageLogic.VehicleParts;
+﻿using System;
+using System.Collections.Generic;
+using GarageLogic.VehicleParts;
 using GarageLogic.VehicleParts.PowerSources;
 using GarageLogic.VehicleTypes;
-using System;
-using System.Collections.Generic;
 
 namespace GarageLogic
 {
@@ -42,21 +42,6 @@ namespace GarageLogic
             initDictionary();
         }
 
-        // init allowed vehicles to be created.
-        private void initDictionary()
-        {
-            r_VehicleModels.Add(eSupportedVehicle.ElectricCar, createElectricCarRecipe());
-            r_VehicleModels.Add(eSupportedVehicle.ElectricMotorcycle, createElectricMotorcycleRecipe());
-            r_VehicleModels.Add(eSupportedVehicle.RegularCar, createFuelCarRecipe());
-            r_VehicleModels.Add(eSupportedVehicle.RegularMotorcycle, createFuelMotorcycleRecipe());
-            r_VehicleModels.Add(eSupportedVehicle.Truck, createTruckRecipe());
-        }
-
-        private Vehicle createAccordingToRecipe(VehicleFactoryRecipe i_VehicleRecipe)
-        {
-            return (Vehicle)Activator.CreateInstance(i_VehicleRecipe.Type);
-        }
-
         public float GetPowerCapacityOfPowerSourceInRecipe(eSupportedVehicle i_VehicleModel)
         {
             return r_VehicleModels[i_VehicleModel].PowerSource.PowerCapacity;
@@ -74,11 +59,11 @@ namespace GarageLogic
 
         //todo: Before inserting vehicle to garage can check if all property full..
 
-        //todo: better name than model
-        public Vehicle CreateUnpopulatedVehicle(   eSupportedVehicle i_VehicleModel, 
-                                                    VehicleRegistrationInfo i_VehicleInfo,
-                                                    float i_InitialPowerSourceValue,
-                                                    TiresInfo i_TiresInfo)
+        public Vehicle CreateUnpopulatedVehicle(
+                                                eSupportedVehicle i_VehicleModel, 
+                                                VehicleRegistrationInfo i_VehicleInfo,
+                                                float i_InitialPowerSourceValue,
+                                                TiresInfo i_TiresInfo)
         {
             VehicleFactoryRecipe recipe = r_VehicleModels[i_VehicleModel];
             PowerSource newPowerSource = createPowerSourceFromRecipe(recipe, i_InitialPowerSourceValue);
@@ -101,24 +86,13 @@ namespace GarageLogic
             }
         }
         
-        private List<Tire> createTiresFromRecipe(VehicleFactoryRecipe i_Recipe, string[] i_TiresManufacturerName)
-        {
-            return TiresFactory.ProductTiresAccordingToExisting(i_TiresManufacturerName, i_Recipe.Tires);
-        }
-
-        private PowerSource createPowerSourceFromRecipe(VehicleFactoryRecipe i_Recipe, float i_InitialPowerSourceValue)
-        {
-            return i_Recipe.PowerSource.duplicate(i_InitialPowerSourceValue);
-        }
-
         // Create electric car Recipe
         private static VehicleFactoryRecipe createElectricCarRecipe()
         {
             return new VehicleFactoryRecipe(
                             new ElectricalSource(k_CarMaxBattaryCapacityInHours),
                             TiresFactory.ProduceTires(k_DefaultTiresManufacturerName, k_CarAmountOfTires, k_CarTireMaxAmountOfPressure),
-                            typeof(Car)
-                        );
+                            typeof(Car));
         }
 
         // Create fuel car Recipe
@@ -127,8 +101,7 @@ namespace GarageLogic
             return new VehicleFactoryRecipe(
                             new FuelSource(k_CarFuelType, k_CarTankCapacity),
                             TiresFactory.ProduceTires(k_DefaultTiresManufacturerName, k_CarAmountOfTires, k_CarTireMaxAmountOfPressure),
-                            typeof(Car)
-                        );
+                            typeof(Car));
         }
 
         // Create truck Recipe
@@ -137,8 +110,7 @@ namespace GarageLogic
             return new VehicleFactoryRecipe(
                             new FuelSource(k_TruckFuelType, k_TruckTankCapacity),
                             TiresFactory.ProduceTires(k_DefaultTiresManufacturerName, k_TruckAmountOfTires, k_TruckTireMaxAmountOfPressure),
-                            typeof(Truck)
-                        );
+                            typeof(Truck));
         }
 
         // Create electric motorcycle Recipe
@@ -147,8 +119,7 @@ namespace GarageLogic
             return new VehicleFactoryRecipe(
                             new ElectricalSource(k_MotorcycleMaxBattaryCapacityInHours),
                             TiresFactory.ProduceTires(k_DefaultTiresManufacturerName, k_MotorcycleAmountOfTires, k_MotorcycleTireMaxAmountOfPressure),
-                            typeof(Motorcycle)
-                        );
+                            typeof(Motorcycle));
         }
 
         // Create fuel motorcycle Recipe
@@ -157,8 +128,32 @@ namespace GarageLogic
             return new VehicleFactoryRecipe(
                             new FuelSource(k_MotorcycleFuelType, k_MotorcycleTankCapacity),
                             TiresFactory.ProduceTires(k_DefaultTiresManufacturerName, k_MotorcycleAmountOfTires, k_MotorcycleTireMaxAmountOfPressure),
-                            typeof(Motorcycle)
-                        );
+                            typeof(Motorcycle));
+        }
+
+        private List<Tire> createTiresFromRecipe(VehicleFactoryRecipe i_Recipe, string[] i_TiresManufacturerName)
+        {
+            return TiresFactory.ProduceTiresAccordingToExisting(i_TiresManufacturerName, i_Recipe.Tires);
+        }
+
+        private PowerSource createPowerSourceFromRecipe(VehicleFactoryRecipe i_Recipe, float i_InitialPowerSourceValue)
+        {
+            return i_Recipe.PowerSource.duplicate(i_InitialPowerSourceValue);
+        }
+
+        // init allowed vehicles to be created.
+        private void initDictionary()
+        {
+            r_VehicleModels.Add(eSupportedVehicle.ElectricCar, createElectricCarRecipe());
+            r_VehicleModels.Add(eSupportedVehicle.ElectricMotorcycle, createElectricMotorcycleRecipe());
+            r_VehicleModels.Add(eSupportedVehicle.RegularCar, createFuelCarRecipe());
+            r_VehicleModels.Add(eSupportedVehicle.RegularMotorcycle, createFuelMotorcycleRecipe());
+            r_VehicleModels.Add(eSupportedVehicle.Truck, createTruckRecipe());
+        }
+
+        private Vehicle createAccordingToRecipe(VehicleFactoryRecipe i_VehicleRecipe)
+        {
+            return (Vehicle)Activator.CreateInstance(i_VehicleRecipe.Type);
         }
     }
 }

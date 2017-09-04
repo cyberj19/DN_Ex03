@@ -22,9 +22,11 @@ namespace GarageLogic
                 {
                     throw new ValueOutOfRangeException(k_MinAmount, r_MaxAmount);
                 }
+
                 m_CurrentAmount = value;
             }
         }
+
         public float MaxAmount
         {
             get
@@ -38,6 +40,5 @@ namespace GarageLogic
             r_MaxAmount = i_MaxAmount;
             m_CurrentAmount = k_MinAmount;
         }
-
     }
 }

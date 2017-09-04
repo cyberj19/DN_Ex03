@@ -16,6 +16,7 @@ namespace GarageLogic
                 return m_VehicleRecords.Count == 0;
             }
         }
+
         public GarageManager()
         {
             m_VehicleRecords = new List<VehicleRecord>();
@@ -52,7 +53,8 @@ namespace GarageLogic
                     }
                 }
             }
-                return retVehicleList;
+
+            return retVehicleList;
         }
 
         // Get a single vehicle record according to plate number
