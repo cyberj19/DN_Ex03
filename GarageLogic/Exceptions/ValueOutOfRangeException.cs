@@ -29,5 +29,13 @@ namespace GarageLogic.Exceptions
             r_MinValue = i_MinValue;
             r_MaxValue = i_MaxValue;
         }
+
+        public override string Message
+        {
+            get
+            {
+                return string.Format(k_ErrFormartStr, r_MinValue, r_MaxValue);
+            }
+        }
     }
 }

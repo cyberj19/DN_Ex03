@@ -4,6 +4,7 @@ using System.Reflection;
 using ConsoleUI.Utils;
 using GarageLogic.VehicleParts;
 using GarageLogic;
+using GarageLogic.Exceptions;
 
 namespace ConsoleUI.VehicleInputOutput
 {
@@ -32,12 +33,12 @@ namespace ConsoleUI.VehicleInputOutput
 
         private static string getOwnerName()
         {
-            return (string)getUserInputAccordingToType("Owner Name", typeof(string));
+            return BasicConsoleOperations.GetString("Please insert Owner Name:");
         }
 
         private static string getModelName()
         {
-            return (string)getUserInputAccordingToType("Model Name", typeof(string));
+            return BasicConsoleOperations.GetString("Please insert Model Name:");
         }
 
         private static Vehicle createVehicleFromUserInput(VehicleFactory i_Factory, VehicleRegistrationInfo i_RegistrationInfo)
@@ -63,18 +64,32 @@ namespace ConsoleUI.VehicleInputOutput
             IList<PropertyInfo> props = new List<PropertyInfo>(i_UnpopulatedVehicle.GetType().GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance));
             foreach (PropertyInfo prop in props)
             {
-                if (prop.CanWrite)
+                while (true)
                 {
-                    prop.SetValue(i_UnpopulatedVehicle, getUserInputAccordingToType(prop.Name, prop.PropertyType));
+                    try
+                    {
+                        if (prop.CanWrite)
+                        {
+                            prop.SetValue(i_UnpopulatedVehicle, getUserInputAccordingToType(prop.Name, prop.PropertyType));
+                        }
+
+                        break;
+                    }
+                    catch (Exception excp)
+                    {
+                        Console.WriteLine("Bad value given");
+                        Console.WriteLine(excp.InnerException.Message);
+                    }
                 }
             }
         }
+        //todo: parsing exception
 
         // Get input from the user according to i_Type
         private static object getUserInputAccordingToType(string i_Name, Type i_Type)
         {
             object retObj = null;
-            string objName = i_Type.IsEnum ? string.Empty : i_Name;
+            string objName = i_Type.IsEnum || (typeof(float) == i_Type) ? string.Empty : i_Type.Name;
             string formatStr = "Please Insert Vehicle's {0} ({1})";
             string requestStr = string.Format(formatStr, BasicConsoleOperations.SplitCamelCaseString(i_Name), objName);
 

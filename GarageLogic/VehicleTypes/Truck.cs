@@ -1,9 +1,11 @@
-﻿namespace GarageLogic.VehicleTypes
+﻿using GarageLogic.Exceptions;
+
+namespace GarageLogic.VehicleTypes
 {
     class Truck : Vehicle
     {
         private bool m_IsCarryingDangerousMaterials;
-        private float m_MaxCarryingWeightAllowedInKg;
+        private LimitedFloatValue m_MaxCarryingWeightAllowedInKg;
 
         public bool IsCarryingDangerousMaterials
         {
@@ -22,13 +24,18 @@
         {
             get
             {
-                return m_MaxCarryingWeightAllowedInKg;
+                return m_MaxCarryingWeightAllowedInKg.Value;
             }
 
             set
             {
-                m_MaxCarryingWeightAllowedInKg = value;
+                m_MaxCarryingWeightAllowedInKg.Value = value;
             }
+        }
+
+        public Truck()
+        {
+            m_MaxCarryingWeightAllowedInKg = new LimitedFloatValue();
         }
     }
 }

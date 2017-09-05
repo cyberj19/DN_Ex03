@@ -1,4 +1,6 @@
-﻿namespace GarageLogic.VehicleTypes
+﻿using GarageLogic.Exceptions;
+
+namespace GarageLogic.VehicleTypes
 {
     class Motorcycle : Vehicle
     {
@@ -22,7 +24,16 @@
 
             set
             {
+                verifyValidEngineVolume(value);
                 m_EngineVolumeCC = value;
+            }
+        }
+
+        private void verifyValidEngineVolume(int i_Val)
+        {
+            if (i_Val < 0)
+            {
+                throw new ValueOutOfRangeException(0, int.MaxValue);
             }
         }
 

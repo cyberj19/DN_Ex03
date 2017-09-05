@@ -11,7 +11,7 @@ namespace ConsoleUI.Utils
         private const string k_YesStr = "yes";
         private const string k_NoStr = "no";
         private const int k_DifferenceBetweenIndexAndSize = 1;
-//todo: Where to throw format exception?
+
         // generates choice string for printing
         private static string generateChoiceStrFromArray(string[] i_StringArr)
         {
@@ -19,7 +19,7 @@ namespace ConsoleUI.Utils
 
             for (uint i = 0; i < i_StringArr.Length; i++)
             {
-                string splittedCamelCaseStr = BasicConsoleOperations.SplitCamelCaseString(i_StringArr[i], ' ');
+                string splittedCamelCaseStr = SplitCamelCaseString(i_StringArr[i]);
 
                 arrayStringBuilder.AppendFormat("({0}) {1}{2}", i, splittedCamelCaseStr, Environment.NewLine);
             }
@@ -30,9 +30,18 @@ namespace ConsoleUI.Utils
         // Get a string from the user
         public static string GetString(string i_MsgStr)
         {
-            Console.WriteLine(i_MsgStr);
+            string inputStr = string.Empty;
 
-            return System.Console.ReadLine();
+            Console.WriteLine(i_MsgStr);
+            
+            while (inputStr.Length == 0)
+            {
+                inputStr = Console.ReadLine();
+                inputStr = inputStr.Trim();
+            }
+
+
+            return inputStr;
         }
 
         // Check whether a string is of numeric type
