@@ -39,8 +39,7 @@ namespace ConsoleUI.Utils
                 inputStr = Console.ReadLine();
                 inputStr = inputStr.Trim();
             }
-
-
+            
             return inputStr;
         }
 
@@ -265,24 +264,39 @@ namespace ConsoleUI.Utils
             return retObj;
         }
 
+        private static bool getSinglePromptQuestion(string i_Question)
+        {
+            string inputStr = GetString(i_Question).ToLower();
+
+            if ((inputStr != k_YesStr) && (inputStr != k_NoStr))
+            {
+                throw new FormatException();
+            }
+
+            return inputStr == k_YesStr;
+        }
+        
         // Prompt user for yes/no question
         public static bool PromptQuestion(string i_Question)
         {
-            string lastInput = null;
+            bool? retBool = null;
 
             Console.Write(i_Question);
             Console.WriteLine(" Please choose: yes/no:");
-            while ((lastInput == null) || ((lastInput != k_YesStr) && (lastInput != k_NoStr)))
-            {
-                if (lastInput != null)
-                {
-                    Console.WriteLine("Bad value. Please insert yes/no:");
-                }
 
-                lastInput = System.Console.ReadLine().ToLower();
+            while (!retBool.HasValue)
+            {
+                try
+                {
+                    retBool = getSinglePromptQuestion(string.Empty);
+                }
+                catch (FormatException)
+                {
+                    WriteString("Bad input. Cannot Parse. Please insert again");
+                }
             }
 
-            return lastInput == k_YesStr;
+            return retBool.Value;
         }
 
         // Split a string according to camel case

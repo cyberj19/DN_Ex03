@@ -83,15 +83,30 @@ namespace ConsoleUI.VehicleInputOutput
                 }
             }
         }
-        //todo: parsing exception
+
+        // get object name
+        private static string getObjName(Type i_Type)
+        {
+            string retString = i_Type.Name;
+
+            if (i_Type.IsEnum)
+            {
+                retString = "Enum";
+            }
+            else if (i_Type == typeof(float))
+            {
+                retString = "Float";
+            }
+
+            return retString;
+        }
 
         // Get input from the user according to i_Type
         private static object getUserInputAccordingToType(string i_Name, Type i_Type)
         {
             object retObj = null;
-            string objName = i_Type.IsEnum || (typeof(float) == i_Type) ? string.Empty : i_Type.Name;
             string formatStr = "Please Insert Vehicle's {0} ({1})";
-            string requestStr = string.Format(formatStr, BasicConsoleOperations.SplitCamelCaseString(i_Name), objName);
+            string requestStr = string.Format(formatStr, BasicConsoleOperations.SplitCamelCaseString(i_Name), getObjName(i_Type));
 
             if (i_Type.IsEnum)
             {
