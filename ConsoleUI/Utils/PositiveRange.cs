@@ -1,4 +1,4 @@
-﻿namespace ConsoleUI
+﻿namespace ConsoleUI.Utils
 {
     class PositiveRange
     {

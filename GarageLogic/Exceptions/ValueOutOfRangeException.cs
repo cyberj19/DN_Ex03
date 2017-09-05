@@ -2,7 +2,7 @@
 
 namespace GarageLogic.Exceptions
 {
-    class ValueOutOfRangeException : Exception
+    public class ValueOutOfRangeException : Exception
     {
         private const string k_ErrFormartStr = "Out of range. Range: {0} - {1}";
         private readonly float r_MinValue;

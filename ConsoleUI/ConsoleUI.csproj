@@ -35,11 +35,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Utils\BasicConsoleOperations.cs" />
-    <Compile Include="Garage.cs" />
+    <Compile Include="GarageUserInterface.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="MenuOption.cs" />
-    <Compile Include="PositiveRange.cs" />
-    <Compile Include="Utils\VehiclePrintUtils.cs" />
+    <Compile Include="eMenuOption.cs" />
+    <Compile Include="Utils\PositiveRange.cs" />
+    <Compile Include="VehicleInputOutput\VehicleInput.cs" />
+    <Compile Include="VehicleInputOutput\VehicleOutput.cs" />
+    <Compile Include="VehicleInputOutput\VehicleRecordData.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GarageLogic\GarageLogic.csproj">

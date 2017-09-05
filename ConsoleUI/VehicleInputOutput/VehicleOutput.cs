@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Reflection;
+using ConsoleUI.Utils;
 using GarageLogic;
 using GarageLogic.VehicleParts;
 using GarageLogic.VehicleParts.PowerSources;
-using System.Reflection;
 
-namespace ConsoleUI.Utils
+namespace ConsoleUI.VehicleInputOutput
 {
-    class VehiclePrintUtils
+    static class VehicleOutput
     {
         // Print a vehicle instance
         public static void PrintVehicle(Vehicle i_Vehicle)
@@ -31,7 +32,7 @@ namespace ConsoleUI.Utils
             foreach (PropertyInfo prop in props)
             {
                 object propValue = prop.GetValue(i_Vehicle, null);
-                outputBuilder.AppendFormat("{0}: {1} {2}", BasicConsoleOperations.SplitCamelCaseString(prop.Name,' '), propValue.ToString(), Environment.NewLine);
+                outputBuilder.AppendFormat("{0}: {1} {2}", BasicConsoleOperations.SplitCamelCaseString(prop.Name), propValue.ToString(), Environment.NewLine);
             }
 
             BasicConsoleOperations.WriteString(outputBuilder.ToString());
@@ -40,42 +41,18 @@ namespace ConsoleUI.Utils
         // print power source information
         private static void printPowerSource(Vehicle i_Vehicle)
         {
-            PowerSource power = i_Vehicle.PowerSource;
-            //todo: doing it twice!!!!! use as instead . here and everywhere else. according to video
-            if (power is ElectricalSource)
-            {
-                printElectricalPowerSource((ElectricalSource)power);
-            }
-            else if (power is FuelSource)
-            {
-                printFuelPowerSource((FuelSource)power);
-            }
-            //todo: else?
+            printPowerSource(i_Vehicle.PowerSource);            
         }
 
-        //todo: reuse the code by electric..
-        private static void printFuelPowerSource(FuelSource i_Source)
+        // print power source information
+        private static void printPowerSource(PowerSource i_Source)
         {
             StringBuilder sourceStrBuilder = new StringBuilder();
 
-            sourceStrBuilder.AppendLine("Power Source Type: Fuel");
-            sourceStrBuilder.AppendFormat("Fuel Type: {0} {1}", i_Source.FuelType.ToString(), Environment.NewLine);
-            sourceStrBuilder.AppendFormat("Current Fuel Level: {0} {1}", i_Source.CurrentPowerLevel, Environment.NewLine);
-            sourceStrBuilder.AppendFormat("Fuel Capacity: {0} {1}", i_Source.PowerCapacity, Environment.NewLine);
-            sourceStrBuilder.AppendFormat("Energy Percentage: {0:P2} {1}", i_Source.EnergyPercent, Environment.NewLine);
-
-            BasicConsoleOperations.WriteString(sourceStrBuilder.ToString());
-        }
-
-        //todo: units?
-        private static void printElectricalPowerSource(ElectricalSource i_Source)
-        {
-            StringBuilder sourceStrBuilder = new StringBuilder();
-
-            sourceStrBuilder.AppendLine("Power Source Type: Electrical");
-            sourceStrBuilder.AppendFormat("Current Battery Power Level: {0} {1}", i_Source.CurrentPowerLevel, Environment.NewLine);
-            sourceStrBuilder.AppendFormat("Battery Capacity: {0} {1}", i_Source.PowerCapacity, Environment.NewLine);
-            sourceStrBuilder.AppendFormat("Energy Percentage: {0:P2} {1}", i_Source.EnergyPercent, Environment.NewLine);
+            sourceStrBuilder.AppendFormat("Power Source Type: {0} {1}", i_Source.ToString(), Environment.NewLine);
+            sourceStrBuilder.AppendFormat("Current Battery Power Level: {0} ({1}) {2}", i_Source.CurrentPowerLevel, i_Source.Units, Environment.NewLine);
+            sourceStrBuilder.AppendFormat("PowerSource Capacity: {0} ({1}) {2}", i_Source.PowerCapacity, i_Source.Units, Environment.NewLine);
+            sourceStrBuilder.AppendFormat("Energy Percentage: {0:P2} ({1}) {2}", i_Source.EnergyPercent, i_Source.Units, Environment.NewLine);
 
             BasicConsoleOperations.WriteString(sourceStrBuilder.ToString());
         }

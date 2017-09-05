@@ -22,6 +22,14 @@ namespace GarageLogic.VehicleParts.PowerSources
             }
         }
 
+        public override string Units
+        {
+            get
+            {
+                return "Battery Time In Hours";
+            }
+        }
+
         public ElectricalSource(float i_MaxBattaryTimeInHours)
         {
             m_BattaryLevel = new LimitedFloatValue(i_MaxBattaryTimeInHours);
@@ -40,6 +48,11 @@ namespace GarageLogic.VehicleParts.PowerSources
             newSource.Recharge(i_InitialCapacity);
 
             return newSource;
+        }
+
+        public override string ToString()
+        {
+            return "Electric Power Source";
         }
     }
 }

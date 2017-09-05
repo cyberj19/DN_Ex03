@@ -39,6 +39,14 @@ namespace GarageLogic.VehicleParts.PowerSources
             }
         }
 
+        public override string Units
+        {
+            get
+            {
+                return "Fuel Liter";
+            }
+        }
+
         public FuelSource(eFuelType i_FuelType, float i_MaxCapacityInLiters)
         {
             r_FuelType = i_FuelType;
@@ -68,6 +76,11 @@ namespace GarageLogic.VehicleParts.PowerSources
             newSource.Refuel(r_FuelType, i_InitialCapacity);
 
             return newSource;
+        }
+
+        public override string ToString()
+        {
+            return "Fuel Power Source";
         }
     }
 }

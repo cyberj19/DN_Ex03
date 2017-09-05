@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,10 +7,11 @@ namespace ConsoleUI.Utils
 {
     class BasicConsoleOperations
     {
+        private const char k_DefaultCamelDelimiter = ' ';
         private const string k_YesStr = "yes";
         private const string k_NoStr = "no";
         private const int k_DifferenceBetweenIndexAndSize = 1;
-
+//todo: Where to throw format exception?
         // generates choice string for printing
         private static string generateChoiceStrFromArray(string[] i_StringArr)
         {
@@ -19,7 +19,9 @@ namespace ConsoleUI.Utils
 
             for (uint i = 0; i < i_StringArr.Length; i++)
             {
-                arrayStringBuilder.AppendFormat("({0}) {1}{2}", i, BasicConsoleOperations.SplitCamelCaseString(i_StringArr[i], ' '), Environment.NewLine);
+                string splittedCamelCaseStr = BasicConsoleOperations.SplitCamelCaseString(i_StringArr[i], ' ');
+
+                arrayStringBuilder.AppendFormat("({0}) {1}{2}", i, splittedCamelCaseStr, Environment.NewLine);
             }
 
             return arrayStringBuilder.ToString();
@@ -33,16 +35,20 @@ namespace ConsoleUI.Utils
             return System.Console.ReadLine();
         }
 
+        // Check whether a string is of numeric type
         private static bool isNumericString(string i_Str)
         {
             return i_Str.All(char.IsDigit);
         }
-        private static bool isNumericStringOfLength(string i_Str, uint i_NumDigits)
+
+        // Check whether a string is numeric and of a certain length
+        private static bool isNumericStringOfMinLength(string i_Str, uint i_NumDigits)
         {
-            return (i_Str.Length == i_NumDigits) && isNumericString(i_Str);
+            return (i_Str.Length >= i_NumDigits) && isNumericString(i_Str);
         }
 
-        public static string GetNumericStringOfLength(string i_MsgStr, uint i_NumDigits)
+        // Get a numeric string of 'i_NumDigits' Length
+        public static string GetNumericStringOfMinimumLength(string i_MsgStr, uint i_NumMinDigits)
         {
             string currInput = null;
             string currMsgStr = i_MsgStr;
@@ -51,7 +57,7 @@ namespace ConsoleUI.Utils
             {
                 currInput = GetString(currMsgStr);
 
-                if (isNumericStringOfLength(currInput, i_NumDigits))
+                if (isNumericStringOfMinLength(currInput, i_NumMinDigits))
                 {
                     break;
                 }
@@ -72,13 +78,13 @@ namespace ConsoleUI.Utils
             return Enum.GetNames(i_EnumType);
         }
 
-        //todo: enum must start from 0 !
-        // Choose an enum value. Shows the user all enum options first
+        // Get an enum choice With casting
         public static T GetEnumChoice<T>(string i_UserMsg)
         {
             return (T)GetEnumChoice(i_UserMsg, typeof(T));
         }
 
+        // Get an enum choice
         public static object GetEnumChoice(string i_UserMsg, Type i_EnumType)
         {
             uint enumVal = GetOption(i_UserMsg, createStrArrFromEnum(i_EnumType));
@@ -86,7 +92,6 @@ namespace ConsoleUI.Utils
             return Enum.ToObject(i_EnumType, enumVal);
         }
 
-        //todo: refactor perhaps move some of the logic to positive number from user
         // Get Multiple Enum choices from the user.
         public static List<T> GetMultipleEnumChoices<T>(string i_UserMsg)
         {
@@ -97,7 +102,7 @@ namespace ConsoleUI.Utils
             List<uint> rawEnumChoices;
 
             Console.WriteLine(i_UserMsg);
-            rawEnumChoices = GetMultiplePositiveNumbersFromUser(enumChoicesStr, new PositiveRange(0, (uint)(enumNameArr.Length) - k_DifferenceBetweenIndexAndSize)); //todo: test max val
+            rawEnumChoices = GetMultiplePositiveNumbersFromUser(enumChoicesStr, new PositiveRange(0, (uint)enumNameArr.Length - k_DifferenceBetweenIndexAndSize));
             foreach (uint enumVal in rawEnumChoices)
             {
                 retEnumList.Add((T)Enum.ToObject(typeOfGeneric, enumVal));
@@ -115,9 +120,6 @@ namespace ConsoleUI.Utils
             }
         }
 
-        //todo: old line, make sure nowhere else             PositiveRange validRange = new PositiveRange(0, (uint)optionsStr.Length - k_DifferenceBetweenIndexAndSize);
-        //todo: the length is of chars..
-
         // Get an option from a string array
         public static uint GetOption(string i_UserMsg, string[] i_Options)
         {
@@ -126,7 +128,7 @@ namespace ConsoleUI.Utils
 
             Console.WriteLine(i_UserMsg);
 
-            return GetPositiveNumberFromUser(optionsStr, validRange);
+            return GetPositiveIntInRange(optionsStr, validRange);
         }
 
         // Get multiple options from a string array
@@ -140,7 +142,6 @@ namespace ConsoleUI.Utils
             return GetMultiplePositiveNumbersFromUser(optionsStr, validRange);
         }
 
-        //todo: consider refactoring
         // Get multiple positive numbers from the user
         public static List<uint> GetMultiplePositiveNumbersFromUser(string i_MessageForUser, PositiveRange i_InputRange)
         {
@@ -154,13 +155,12 @@ namespace ConsoleUI.Utils
             {
                 userInputStr = System.Console.ReadLine().Trim();
 
-                //todo: still need to check what happens when no delimeter presented. i expect it on "abc" to return "abc"
                 foreach (string subStr in userInputStr.Split(','))
                 {
                     isValidInput = uint.TryParse(subStr, out currUserNumericInput) && i_InputRange.IsInRange(currUserNumericInput);
                     if (!isValidInput)
                     {
-                        System.Console.WriteLine("Invalid input! Please try again:");
+                        Console.WriteLine("Invalid input! Please try again:");
                         retList.Clear();
                         break;
                     }
@@ -176,94 +176,84 @@ namespace ConsoleUI.Utils
         }
 
         // Get a positive number from the user. If the user inserts 'i_ExcludingStr', the function will return null instead
-        public static uint GetPositiveNumberFromUser(string i_MessageForUser, PositiveRange i_InputRange)
+        public static uint GetPositiveIntInRange(string i_MessageForUser, PositiveRange i_InputRange)
         {
-            string userInputStr;
-            uint currUserNumericInput;
-            bool isValidInput;
-            uint? retUserInput = null;
+            string outStr = string.Format("{0} (Range: {1}-{2})", i_MessageForUser, i_InputRange.Min, i_InputRange.Max);
+            uint retNum = GetObjectFromUser<uint>(outStr);
 
-            System.Console.WriteLine(string.Format("{0} (Range: {1}-{2})", i_MessageForUser, i_InputRange.Min, i_InputRange.Max));
-            do
+            while (!i_InputRange.IsInRange(retNum))
             {
-                userInputStr = System.Console.ReadLine();
-                isValidInput = uint.TryParse(userInputStr, out currUserNumericInput) && i_InputRange.IsInRange(currUserNumericInput);
-                if (!isValidInput)
-                {
-                    System.Console.WriteLine("Invalid input! Please try again:");
-                }
-                else
-                {
-                    retUserInput = currUserNumericInput;
-                }
+                retNum = GetObjectFromUser<uint>("Input is not in range. Please insert again:");
             }
-            while (!isValidInput);
 
-            return retUserInput.Value;
+            return retNum;
         }
 
-
+        // Write new line
         public static void NewLine()
         {
             WriteString(string.Empty);
         }
 
-        //todo: Make sure in the calling that its ok to enter MaxVal! (Max val == max val and not max val == max val - 1)
-        public static float GetPositiveFloatFromUserWithMaxVal(string i_MessageForUser, float i_MaxVal)
-        {
-
-            string initialMsgToUser = string.Format("{0} (Max value is {1})", i_MessageForUser, i_MaxVal.ToString());
-            string currMsg = initialMsgToUser;
-            float retVal;
-
-            do
-            {
-                retVal = GetPositiveFloatFromUser(currMsg);
-
-                if (retVal <= i_MaxVal)
-                {
-                    break;
-                }
-
-                if (currMsg == initialMsgToUser)
-                {
-                    currMsg = "Number is above range. Please insert again:";
-                }
-            }
-            while (true);
-
-            return retVal;
-        }
-        //todo: Duplication of code
+        // Get positive float from the user
         public static float GetPositiveFloatFromUser(string i_MessageForUser)
         {
-            string userInputStr;
-            float currUserNumericInput;
-            bool isValidInput;
-            float? retUserInput = null;
-
-            System.Console.WriteLine(i_MessageForUser);
-            do
-            {
-                userInputStr = System.Console.ReadLine();
-                isValidInput = float.TryParse(userInputStr, out currUserNumericInput) && (currUserNumericInput >= 0.0f);
-                if (!isValidInput)
-                {
-                    System.Console.WriteLine("Invalid input! Please try again:");
-                }
-                else
-                {
-                    retUserInput = currUserNumericInput;
-                }
-            }
-            while (!isValidInput);
-
-            return retUserInput.Value;
+            return GetPositiveFloatFromUser(i_MessageForUser, null);
         }
 
+        // Get positive float from the user with an optional max value
+        public static float GetPositiveFloatFromUser(string i_MessageForUser, float? i_MaxVal)
+        {
+            string outStr = i_MaxVal.HasValue ? getMaxValStr(i_MessageForUser, i_MaxVal) : i_MessageForUser;
+            float retFloat = GetObjectFromUser<float>(outStr);
+
+            while ((retFloat < 0.0f) || (i_MaxVal.HasValue && (retFloat > i_MaxVal.Value)))
+            {
+                retFloat = GetObjectFromUser<float>("Input is not in range. Please insert again:");
+            }
+
+            return retFloat;
+        }
+
+        // Get max value range string
+        private static string getMaxValStr(string i_AdditionalStr, object i_MaxVal)
+        {
+            return string.Format("{0} (Max value is {1})", i_AdditionalStr, i_MaxVal.ToString());
+        }
+
+        // Write a string
         public static void WriteString(string i_Str)
         {
             Console.WriteLine(i_Str);
+        }
+
+        // Get type from user (With casting)
+        public static T GetObjectFromUser<T>(string i_RequestStr)
+        {
+            return (T)GetObjectFromUser(i_RequestStr, typeof(T));
+        }
+
+        // Get type from user
+        public static object GetObjectFromUser(string i_RequestStr, Type i_Type)
+        {
+            object retObj = null;
+            string requestStr = i_RequestStr;
+            string errStr = "Bad input was inserted. Please insert again:";
+
+            while (true)
+            {
+                try
+                {
+                    retObj = Convert.ChangeType(GetString(requestStr), i_Type);
+                    break;
+                }
+                catch (Exception)
+                {
+                    requestStr = errStr;
+                }
+            }
+
+            return retObj;
         }
 
         // Prompt user for yes/no question
@@ -286,6 +276,13 @@ namespace ConsoleUI.Utils
             return lastInput == k_YesStr;
         }
 
+        // Split a string according to camel case
+        public static string SplitCamelCaseString(string i_CamelCaseStr)
+        {
+            return SplitCamelCaseString(i_CamelCaseStr, k_DefaultCamelDelimiter);
+        }
+
+        // Split a string according to camel case
         public static string SplitCamelCaseString(string i_CamelCaseStr, char i_NewDelimiter)
         {
             List<char> chars = new List<char>();
@@ -300,6 +297,7 @@ namespace ConsoleUI.Utils
                     {
                         chars.Add(i_NewDelimiter);
                     }
+
                     chars.Add(c);
                     isCapitalSequence = true;
                 }
@@ -312,6 +310,7 @@ namespace ConsoleUI.Utils
 
                     isCapitalSequence = false;
                 }
+
                 counter++;
             }
 
@@ -319,4 +318,3 @@ namespace ConsoleUI.Utils
         }
     }
 }
-
