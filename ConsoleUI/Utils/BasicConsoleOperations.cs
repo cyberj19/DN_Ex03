@@ -19,7 +19,7 @@ namespace ConsoleUI.Utils
 
             for (uint i = 0; i < i_StringArr.Length; i++)
             {
-                arrayStringBuilder.AppendFormat("({0}) {1}{2}", i, i_StringArr[i], Environment.NewLine);
+                arrayStringBuilder.AppendFormat("({0}) {1}{2}", i, BasicConsoleOperations.SplitCamelCaseString(i_StringArr[i], ' '), Environment.NewLine);
             }
 
             return arrayStringBuilder.ToString();
@@ -116,7 +116,7 @@ namespace ConsoleUI.Utils
         }
 
         //todo: old line, make sure nowhere else             PositiveRange validRange = new PositiveRange(0, (uint)optionsStr.Length - k_DifferenceBetweenIndexAndSize);
-           //todo: the length is of chars..
+        //todo: the length is of chars..
 
         // Get an option from a string array
         public static uint GetOption(string i_UserMsg, string[] i_Options)
@@ -183,7 +183,7 @@ namespace ConsoleUI.Utils
             bool isValidInput;
             uint? retUserInput = null;
 
-            System.Console.WriteLine(string.Format("{0} (Range: {1}-{2})" , i_MessageForUser, i_InputRange.Min, i_InputRange.Max));
+            System.Console.WriteLine(string.Format("{0} (Range: {1}-{2})", i_MessageForUser, i_InputRange.Min, i_InputRange.Max));
             do
             {
                 userInputStr = System.Console.ReadLine();
@@ -211,8 +211,8 @@ namespace ConsoleUI.Utils
         //todo: Make sure in the calling that its ok to enter MaxVal! (Max val == max val and not max val == max val - 1)
         public static float GetPositiveFloatFromUserWithMaxVal(string i_MessageForUser, float i_MaxVal)
         {
-        
-            string initialMsgToUser = string.Format("{0} (Max value is {1})", i_MessageForUser ,i_MaxVal.ToString());
+
+            string initialMsgToUser = string.Format("{0} (Max value is {1})", i_MessageForUser, i_MaxVal.ToString());
             string currMsg = initialMsgToUser;
             float retVal;
 
@@ -284,6 +284,34 @@ namespace ConsoleUI.Utils
             }
 
             return lastInput == k_YesStr;
+        }
+
+        public static string SplitCamelCaseString(string i_CamelCaseStr, char i_NewDelimiter)
+        {
+            List<char> chars = new List<char>();
+            int counter = 0;
+            bool isCapitalSequence = false;
+
+            foreach (char c in i_CamelCaseStr)
+            {
+                if (char.IsUpper(c) && !isCapitalSequence)
+                {
+                    if (counter > 0)
+                    {
+                        chars.Add(i_NewDelimiter);
+                    }
+                    chars.Add(c);
+                    isCapitalSequence = true;
+                }
+                else if (c != i_NewDelimiter)
+                {
+                    chars.Add(c);
+                    isCapitalSequence = false;
+                }
+                counter++;
+            }
+
+            return new string(chars.ToArray());
         }
     }
 }

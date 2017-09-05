@@ -14,8 +14,8 @@ namespace ConsoleUI
             ShowAllVehiclesId,
             ModifyVehicleState,
             FillTireAir,
-            RefuelCar,
-            ChargeCar,
+            RefuelVehicle,
+            ChargeVehicle,
             ShowVehicleInformation,
             Exit
         }
@@ -25,12 +25,12 @@ namespace ConsoleUI
         //todo: better way for the amount of items..
         private static readonly string[] sr_OptionsStrArray = new string[]
         {
-            "Insert a new vehicle",
-            "Show all vehicle's Licensing Plate",
+            "Insert A New Vehicle",
+            "Show All Vehicle's Licensing Plate",
             "Modify Vehicle State",
             "Fill Tire's Air",
-            "Refuel Car",
-            "Charge Car",
+            "Refuel Vehicle",
+            "Charge Vehicle",
             "Show Vehicle's Information",
             "Exit"
         };

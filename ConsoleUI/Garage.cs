@@ -31,12 +31,12 @@ namespace ConsoleUI
 
                 if (!handleMenuOptionRequest(menuOptionSelect))
                 {
-                    BasicConsoleOperations.WriteString("Operation has failed!");
+                    BasicConsoleOperations.WriteString("Operation Has Failed!");
                     //todo: Write about operation failed
                 }
                 else
                 {
-                    BasicConsoleOperations.WriteString("Operation succeeded!");
+                    BasicConsoleOperations.WriteString("Operation Succeeded!");
                 }
 
                 BasicConsoleOperations.NewLine();
@@ -47,14 +47,14 @@ namespace ConsoleUI
         {
             string[] menuOptionsArray = MenuOption.StringArray;
 
-            return MenuOption.Get(BasicConsoleOperations.GetOption("Choose a menu option:", menuOptionsArray));
+            return MenuOption.Get(BasicConsoleOperations.GetOption("Choose A Menu Option:", menuOptionsArray));
         }
 
         private VehicleRecord getVehicleRecordFromLicensePlate()
         {
             GarageLogic.VehicleRecord retVehicle = null;
             bool isFirstTime = true;
-            string outStr = "Please insert vehicle's plate number:";
+            string outStr = "Please Insert Vehicle's Plate Number:";
 
             do
             {
@@ -63,7 +63,7 @@ namespace ConsoleUI
                 if (isFirstTime)
                 {
                     isFirstTime = !isFirstTime;
-                    outStr = "Bad vehicle's plate number. Please insert again:";
+                    outStr = "Bad Vehicle's Plate Number. Please Insert Again:";
                 }
 
                 retVehicle = m_GarageManager.GetVehicleRecord(plateNumber.ToString());
@@ -85,7 +85,7 @@ namespace ConsoleUI
 
                 if (i_Option != MenuOption.eOption.InsertNewVehicle && m_GarageManager.IsGarageEmpty)
                 {
-                    Console.WriteLine("Garage is Empty, perhaps you want to insert a vehicle first?");
+                    Console.WriteLine("Garage Is Empty, Perhaps You Want To Insert A Vehicle First?");
                 }
                 else
                 {
@@ -103,11 +103,11 @@ namespace ConsoleUI
                         case MenuOption.eOption.FillTireAir:
                             handleFillTireAir(getVehicleRecordFromLicensePlate());
                             break;
-                        case MenuOption.eOption.RefuelCar:
-                            handleRefuelCar(getVehicleRecordFromLicensePlate());
+                        case MenuOption.eOption.RefuelVehicle:
+                            handleRefuelVehicle(getVehicleRecordFromLicensePlate());
                             break;
-                        case MenuOption.eOption.ChargeCar:
-                            handleChargeCar(getVehicleRecordFromLicensePlate());
+                        case MenuOption.eOption.ChargeVehicle:
+                            handleChargeVehicle(getVehicleRecordFromLicensePlate());
                             break;
                         case MenuOption.eOption.ShowVehicleInformation:
                             handleShowVehicleInformation(getVehicleRecordFromLicensePlate());
@@ -117,7 +117,7 @@ namespace ConsoleUI
             }
             catch (ArgumentException aexcp)
             {
-                BasicConsoleOperations.WriteString("Argument Exception: Bad arguments!");
+                BasicConsoleOperations.WriteString("Argument Exception: Bad Arguments!");
                 hasOperationSucceeded = false;
             }
 
@@ -127,21 +127,21 @@ namespace ConsoleUI
         const uint k_NumDigitsInPhoneNumber = 10; //todo; Choose min and max and also perhaps remove it entirely
         private void handleInsertNewVehicle()
         {
-            uint plateNumber = BasicConsoleOperations.GetPositiveNumberFromUser("Please insert vehicle's plate number:", sr_plateNumberRange);
+            uint plateNumber = BasicConsoleOperations.GetPositiveNumberFromUser("Please Insert Vehicle's Plate Number:", sr_plateNumberRange);
             VehicleRecord existingRecord = m_GarageManager.GetVehicleRecord(plateNumber.ToString());
 
             if (existingRecord != null)
             {
-                BasicConsoleOperations.WriteString("Vehicle is already in garage. Moving to \"In Repair\"");
+                BasicConsoleOperations.WriteString("Vehicle Is Already In Garage. Moving To \"In Repair\"");
                 existingRecord.Status = VehicleRecord.eStatus.InRepair;
             }
             else
             {
-                string modelName = BasicConsoleOperations.GetString("Please insert model name:");
+                string modelName = (string) getUserInputAccordingToType("Model Name", string.Empty.GetType());
                 VehicleRegistrationInfo registrationInfo = new VehicleRegistrationInfo(modelName, plateNumber.ToString());
                 Vehicle createdVehicle = createVehicleFromUserInput(registrationInfo);
-                string ownerName = BasicConsoleOperations.GetString("Please insert owner name:");
-                string ownerPhoneNumber = BasicConsoleOperations.GetNumericStringOfLength(string.Format("Please insert owner's phone number ({0} digits):", k_NumDigitsInPhoneNumber), k_NumDigitsInPhoneNumber);
+                string ownerName = (string) getUserInputAccordingToType("Owner Name", string.Empty.GetType());
+                string ownerPhoneNumber = BasicConsoleOperations.GetNumericStringOfLength(string.Format("Please Insert Owner's Phone Number ({0} digits):", k_NumDigitsInPhoneNumber), k_NumDigitsInPhoneNumber);
 
                 m_GarageManager.InsertRecord(ownerName, ownerPhoneNumber, createdVehicle);
             }
@@ -150,13 +150,13 @@ namespace ConsoleUI
         //todo: reconsider writing better strings than those of the enum
         private Vehicle createVehicleFromUserInput(VehicleRegistrationInfo i_RegistrationInfo)
         {
-            VehicleFactory.eSupportedVehicle selectedVehicle = 
-                BasicConsoleOperations.GetEnumChoice<VehicleFactory.eSupportedVehicle>("Please choose vehicle type:");
+            VehicleFactory.eSupportedVehicle selectedVehicle =
+                BasicConsoleOperations.GetEnumChoice<VehicleFactory.eSupportedVehicle>("Please Choose Vehicle Type:");
             TiresInfo tiresInfo = getUserInputAllTiresInfo(
-                m_Factory.GetNumTiresInRecipe(selectedVehicle), 
+                m_Factory.GetNumTiresInRecipe(selectedVehicle),
                 m_Factory.GetTireMaxPsiInRecipe(selectedVehicle));
             float initialPowerSourceValue = BasicConsoleOperations.GetPositiveFloatFromUserWithMaxVal(
-                                                "Please insert initial power source value ", 
+                                                "Please Insert Initial Power Source Value ",
                                                 m_Factory.GetPowerCapacityOfPowerSourceInRecipe(selectedVehicle)
                                             );
             Vehicle unpopulatedVehicle = m_Factory.CreateUnpopulatedVehicle(selectedVehicle, i_RegistrationInfo, initialPowerSourceValue, tiresInfo);
@@ -182,7 +182,7 @@ namespace ConsoleUI
         object getUserInputAccordingToType(string i_Name, Type i_Type)
         {
             object retObj = null;
-            string requestStr = string.Format("Please insert information for {0} ({1})", i_Name, i_Type.Name);
+            string requestStr = string.Format("Please Insert Vehicle's {0} {1}" ,BasicConsoleOperations.SplitCamelCaseString(i_Name, ' '), (i_Type.BaseType.Name == "Enum") ? "" : "("+i_Type.Name+")");
 
             if (i_Type.IsEnum)
             {
@@ -206,19 +206,19 @@ namespace ConsoleUI
             string[] tiresManufacturerNames = new string[i_NumTires];
             float[] tiresInitialAirValues = new float[i_NumTires];
             bool areAllTiresSameType = false;
-  
+
             for (int i = 0; i < i_NumTires; i++)
             {
                 if (!areAllTiresSameType)
                 {
                     BasicConsoleOperations.WriteString("_______");
-                    BasicConsoleOperations.WriteString(string.Format("Entering data for tire number: {0}", i + 1));
-                    tiresManufacturerNames[i] = BasicConsoleOperations.GetString("Please insert manufacturer name:");
-                    tiresInitialAirValues[i] = BasicConsoleOperations.GetPositiveFloatFromUserWithMaxVal("Please insert initial air value", i_MaxPSI);
+                    BasicConsoleOperations.WriteString(string.Format("Entering Data For Tire Number: {0}", i + 1));
+                    tiresManufacturerNames[i] = BasicConsoleOperations.GetString("Please Insert Manufacturer Name:");
+                    tiresInitialAirValues[i] = BasicConsoleOperations.GetPositiveFloatFromUserWithMaxVal("Please Insert Initial Air Value", i_MaxPSI);
 
                     if (i == k_FirstLoopRun)
                     {
-                        areAllTiresSameType = BasicConsoleOperations.PromptQuestion("Are all tires the same? (Automatic fillup)");
+                        areAllTiresSameType = BasicConsoleOperations.PromptQuestion("Are All Tires The Same? (Automatic Fillup)");
                     }
                 }
                 else
@@ -234,7 +234,7 @@ namespace ConsoleUI
         // Print status of a specific vehicle, by its record
         private void printRecordStatus(string i_Msg, VehicleRecord i_VehicleRecord)
         {
-            BasicConsoleOperations.WriteString(string.Format("{0} {1}", i_Msg, i_VehicleRecord.Status.ToString()));
+            BasicConsoleOperations.WriteString(string.Format("{0} {1}", i_Msg, BasicConsoleOperations.SplitCamelCaseString(i_VehicleRecord.Status.ToString(), ' ')));
         }
 
         // Show vehicle information
@@ -254,7 +254,7 @@ namespace ConsoleUI
 
             printRecordStatus("Current Vehicle State:", i_VehicleRecord);
             //todo: test this. make sure if changing status to same or to invalid, throws?.. also make sure i catch that
-            newStatus = BasicConsoleOperations.GetEnumChoice<VehicleRecord.eStatus>("Please choose new state:");
+            newStatus = BasicConsoleOperations.GetEnumChoice<VehicleRecord.eStatus>("Please Choose New State:");
             i_VehicleRecord.Status = newStatus;
         }
 
@@ -268,7 +268,7 @@ namespace ConsoleUI
         }
 
         // Handle charge car menu request
-        private void handleChargeCar(VehicleRecord i_VehicleRecord)
+        private void handleChargeVehicle(VehicleRecord i_VehicleRecord)
         {
             PowerSource powerSource = i_VehicleRecord.Vehicle.PowerSource;
             ElectricalSource electricSource;
@@ -276,7 +276,7 @@ namespace ConsoleUI
 
             if (powerSource.EnergyPercent < 0.0001)
             {
-                BasicConsoleOperations.WriteString("Already in full Capacity.");
+                BasicConsoleOperations.WriteString("Already In Full Capacity.");
             }
             else
             {
@@ -287,13 +287,13 @@ namespace ConsoleUI
 
                 electricSource = (ElectricalSource)powerSource;
                 //todo: sure needs in hours?
-                timeToCharge = BasicConsoleOperations.GetPositiveFloatFromUserWithMaxVal("Please insert time to charge in hours:", powerSource.PowerCapacity - powerSource.CurrentPowerLevel);
+                timeToCharge = BasicConsoleOperations.GetPositiveFloatFromUserWithMaxVal("Please Insert Time To Charge In Hours:", powerSource.PowerCapacity - powerSource.CurrentPowerLevel);
                 electricSource.Recharge(timeToCharge);
             }
         }
 
         // Handle refuel car menu request
-        private void handleRefuelCar(VehicleRecord i_VehicleRecord)
+        private void handleRefuelVehicle(VehicleRecord i_VehicleRecord)
         {
             PowerSource powerSource = i_VehicleRecord.Vehicle.PowerSource;
             FuelSource fuelSource;
@@ -303,7 +303,7 @@ namespace ConsoleUI
             //todo: const
             if (powerSource.EnergyPercent < 0.0001)
             {
-                BasicConsoleOperations.WriteString("Already in full fuel.");
+                BasicConsoleOperations.WriteString("Already In Full Fuel.");
             }
             else
             {
@@ -313,8 +313,8 @@ namespace ConsoleUI
                 }
 
                 fuelSource = (FuelSource)powerSource;
-                usedFuelType = BasicConsoleOperations.GetEnumChoice<FuelSource.eFuelType>("Please choose fuel type:");
-                amountToFill = BasicConsoleOperations.GetPositiveFloatFromUserWithMaxVal("Please insert amount to fuel in liters:", powerSource.PowerCapacity - powerSource.CurrentPowerLevel);
+                usedFuelType = BasicConsoleOperations.GetEnumChoice<FuelSource.eFuelType>("Please Choose Fuel Type:");
+                amountToFill = BasicConsoleOperations.GetPositiveFloatFromUserWithMaxVal("Please Insert Amount To Fuel In Liters:", powerSource.PowerCapacity - powerSource.CurrentPowerLevel);
                 fuelSource.Refuel(usedFuelType, amountToFill);
             }
         }
@@ -324,9 +324,9 @@ namespace ConsoleUI
         {
             List<VehicleRecord.eStatus> filterList = new List<VehicleRecord.eStatus>();
 
-            if (BasicConsoleOperations.PromptQuestion("Would you like to filter out some of the results?"))
+            if (BasicConsoleOperations.PromptQuestion("Would You Like To Filter Out Some Of The Results?"))
             {
-                filterList = BasicConsoleOperations.GetMultipleEnumChoices<VehicleRecord.eStatus>("Please choose out filters: (Multiple filters can be choosed my using a comma between each)");
+                filterList = BasicConsoleOperations.GetMultipleEnumChoices<VehicleRecord.eStatus>("Please Choose Out Filters: (Multiple Filters Can Be Choosed My Using A Comma Between Each)");
             }
 
             return filterList;
