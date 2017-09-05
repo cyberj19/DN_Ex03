@@ -246,7 +246,7 @@ namespace ConsoleUI.Utils
             do
             {
                 userInputStr = System.Console.ReadLine();
-                isValidInput = float.TryParse(userInputStr, out currUserNumericInput) && (currUserNumericInput > 0.0f);
+                isValidInput = float.TryParse(userInputStr, out currUserNumericInput) && (currUserNumericInput >= 0.0f);
                 if (!isValidInput)
                 {
                     System.Console.WriteLine("Invalid input! Please try again:");
@@ -303,9 +303,13 @@ namespace ConsoleUI.Utils
                     chars.Add(c);
                     isCapitalSequence = true;
                 }
-                else if (c != i_NewDelimiter)
+                else
                 {
-                    chars.Add(c);
+                    if (c != i_NewDelimiter)
+                    {
+                        chars.Add(c);
+                    }
+
                     isCapitalSequence = false;
                 }
                 counter++;

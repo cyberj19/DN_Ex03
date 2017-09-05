@@ -274,7 +274,7 @@ namespace ConsoleUI
             ElectricalSource electricSource;
             float timeToCharge;
 
-            if (powerSource.EnergyPercent < 0.0001)
+            if (powerSource.EnergyPercent > 0.999)
             {
                 BasicConsoleOperations.WriteString("Already In Full Capacity.");
             }
@@ -301,7 +301,7 @@ namespace ConsoleUI
             float amountToFill;
 
             //todo: const
-            if (powerSource.EnergyPercent < 0.0001)
+            if (powerSource.EnergyPercent > 0.999)
             {
                 BasicConsoleOperations.WriteString("Already In Full Fuel.");
             }
